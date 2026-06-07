@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="public/freebox_logo.png" alt="Freebox Logo" width="128" height="128" />
+</p>
+
 # 📦 Freebox — Deterministic AI Sports Periodization
 
 > **"Weniger, aber besser."** (Less, but better) — Dieter Rams. 
