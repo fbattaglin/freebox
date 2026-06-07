@@ -1,4 +1,4 @@
-const CACHE_NAME = "freebox-v1";
+const CACHE_NAME = "freebox-v1.1";
 const ASSETS_TO_CACHE = [
   "/",
   "/favicon.ico",
@@ -7,6 +7,7 @@ const ASSETS_TO_CACHE = [
 
 // Install Event
 self.addEventListener("install", (event) => {
+  self.skipWaiting(); // Force active immediately
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
       console.log("Caching shell assets...");
@@ -27,7 +28,7 @@ self.addEventListener("activate", (event) => {
           }
         })
       );
-    })
+    }).then(() => self.clients.claim()) // Claim clients immediately
   );
 });
 
@@ -54,18 +55,41 @@ self.addEventListener("fetch", (event) => {
     return; // Let browser handle it directly
   }
 
-  event.respondWith(
-    caches.match(event.request).then((cachedResponse) => {
-      if (cachedResponse) {
-        return cachedResponse;
-      }
-      return fetch(event.request).catch(() => {
-        // Fallback offline response for HTML requests
-        const acceptHeader = event.request.headers.get("accept");
-        if (acceptHeader && acceptHeader.includes("text/html")) {
-          return caches.match("/");
+  // Determine if it is a request for the main HTML document
+  const isHtml = event.request.headers.get("accept")?.includes("text/html") || url.pathname === "/";
+
+  if (isHtml) {
+    // Network-First strategy for the main application pages to guarantee updates
+    event.respondWith(
+      fetch(event.request)
+        .then((response) => {
+          // Cache the fresh page
+          const responseClone = response.clone();
+          caches.open(CACHE_NAME).then((cache) => {
+            cache.put(event.request, responseClone);
+          });
+          return response;
+        })
+        .catch(() => {
+          // Fallback to cache if completely offline
+          return caches.match(event.request);
+        })
+    );
+  } else {
+    // Cache-First strategy for static assets (icons, fonts, etc.)
+    event.respondWith(
+      caches.match(event.request).then((cachedResponse) => {
+        if (cachedResponse) {
+          return cachedResponse;
         }
-      });
-    })
-  );
+        return fetch(event.request).then((response) => {
+          const responseClone = response.clone();
+          caches.open(CACHE_NAME).then((cache) => {
+            cache.put(event.request, responseClone);
+          });
+          return response;
+        });
+      })
+    );
+  }
 });

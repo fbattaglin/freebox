@@ -116,7 +116,22 @@ export default function Home() {
         });
       } else {
         navigator.serviceWorker.register("/sw.js")
-          .then((reg) => console.log("Service Worker registered with scope:", reg.scope))
+          .then((reg) => {
+            console.log("Service Worker registered with scope:", reg.scope);
+            
+            // Check for updates to force reload when a new service worker takes over
+            reg.addEventListener("updatefound", () => {
+              const newWorker = reg.installing;
+              if (newWorker) {
+                newWorker.addEventListener("statechange", () => {
+                  if (newWorker.state === "activated" && navigator.serviceWorker.controller) {
+                    console.log("New service worker activated. Reloading page...");
+                    window.location.reload();
+                  }
+                });
+              }
+            });
+          })
           .catch((err) => console.error("Service Worker registration failed:", err));
       }
     }
