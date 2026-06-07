@@ -863,6 +863,16 @@ export default function Home() {
                   )}
                 </div>
 
+                {/* Call-to-action Alert: Next Step */}
+                <div className="bg-[#E6EEFF] border border-[#0055FF]/20 rounded-md p-5 text-center space-y-2">
+                  <h4 className="text-xs font-semibold text-[#0055FF] lowercase flex items-center justify-center gap-1.5 font-mono">
+                    <Calendar className="w-4 h-4" /> check back tomorrow
+                  </h4>
+                  <p className="text-xs text-[#0055FF]/90 leading-relaxed lowercase">
+                    your work for today is fully logged and secure. <strong className="text-[#0055FF] font-semibold">return to the app tomorrow</strong> to check in your sleep, energy, and recovery to dynamically synthesize your next session.
+                  </p>
+                </div>
+
                 {/* Science Explainer Card */}
                 {getPhaseScienceDetail(todaysLog.phase) && (() => {
                   const science = getPhaseScienceDetail(todaysLog.phase)!;

@@ -18,6 +18,15 @@ interface HistoryCalendarProps {
 }
 
 export function HistoryCalendar({ history, onDelete }: HistoryCalendarProps) {
+  const formatLoad = (weight: string) => {
+    if (!weight) return "bodyweight";
+    const wLower = weight.trim().toLowerCase();
+    if (wLower === "bw" || wLower === "body" || wLower === "bodyweight" || wLower === "0") {
+      return "bodyweight";
+    }
+    return `${weight} kg`;
+  };
+
   if (history.length === 0) {
     return (
       <div className="bg-[#FFFFFF] border border-border-light rounded-md p-6 text-center text-text-secondary">
@@ -78,13 +87,33 @@ export function HistoryCalendar({ history, onDelete }: HistoryCalendarProps) {
               "{entry.why}"
             </div>
 
-            <div className="pt-2">
-              <div className="text-[10px] text-text-secondary uppercase tracking-wider font-mono mb-2">exercises executed</div>
-              <div className="flex flex-wrap gap-2">
+            <div className="pt-3 border-t border-border-light mt-3 space-y-3">
+              <div className="text-[10px] text-text-secondary uppercase tracking-wider font-mono">execution details</div>
+              <div className="space-y-3">
                 {entry.exercises.map((ex, exIdx) => (
-                  <span key={exIdx} className="px-2 py-1 bg-[#FDFDFD] border border-border-light rounded text-[10px] text-text-secondary">
-                    {ex.name}
-                  </span>
+                  <div key={exIdx} className="bg-[#F9F9FB] border border-border-light rounded p-3">
+                    <div className="text-xs font-medium text-foreground lowercase mb-2 flex justify-between items-center">
+                      <span>{ex.name}</span>
+                      <span className="text-[10px] text-text-secondary font-mono bg-[#FFFFFF] px-2 py-0.5 border border-border-light rounded">
+                        {ex.setsData.length} sets
+                      </span>
+                    </div>
+                    <div className="grid grid-cols-2 gap-1.5 sm:grid-cols-4">
+                      {ex.setsData.map((set, sIdx) => (
+                        <div key={sIdx} className="bg-[#FFFFFF] border border-border-light rounded px-2.5 py-1.5 text-[10px] text-text-secondary font-mono flex flex-col gap-0.5">
+                          <span className="text-[9px] text-text-secondary/70">set {sIdx + 1}</span>
+                          <span className="text-foreground">
+                            {formatLoad(set.weight) === "bodyweight" ? (
+                              <span className="text-text-secondary lowercase">bodyweight</span>
+                            ) : (
+                              <span>{set.weight} <span className="text-[8px] text-text-secondary/80">kg</span></span>
+                            )}
+                            {" x "}{set.reps}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
                 ))}
               </div>
             </div>
