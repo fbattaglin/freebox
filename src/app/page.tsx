@@ -28,7 +28,8 @@ import {
   ShieldAlert,
   ShieldX,
   Clock,
-  ArrowRight
+  ArrowRight,
+  Heart
 } from "lucide-react";
 import { getCycleState } from "@/lib/cycle-math";
 import { LlmWorkoutOutput, UserProfile } from "@/lib/schemas";
@@ -52,6 +53,41 @@ interface LocalHistoryEntry {
 interface SkillState {
   [familyId: string]: number; // Maps familyId to current level (1-6)
 }
+
+// Pre-determined recovery messages to avoid token consumption
+const getRecoveryMessage = (phase: string, date: Date) => {
+  const generic = [
+    "tissue repair and neurological adaptation require a caloric surplus and high-quality sleep.",
+    "i know you want to keep moving, but trust the process. let your metabolic buffers reset today.",
+    "science tells us that adaptation happens between sessions, not during them. enjoy your passive recovery."
+  ];
+  
+  const specific: Record<string, string[]> = {
+    strength: [
+      "your central nervous system took a hit this week with those heavy loads. sleep is your #1 priority tonight.",
+      "we maximized neurological strength gains this week. keep your protein intake high so your motor units can rebuild."
+    ],
+    hypertrophy: [
+      "myofibrillar protein synthesis is peaking right now. give your muscles the fuel they need to grow.",
+      "you caused a lot of mechanical tension this week. stretch those sore muscles and eat well!"
+    ],
+    resistance: [
+      "your metabolic buffers are exhausted from all that lactic acid. hydrate aggressively today.",
+      "we pushed your endurance limits this week. active recovery like a light walk will help clear out any lingering fatigue."
+    ],
+    explosive: [
+      "rate of force development training requires a fresh CNS. absolutely zero explosive movements today. rest completely.",
+      "your tendons and joints worked hard this week. prioritize mobility and joint health today."
+    ],
+    deload: [
+      "this is the week where the magic happens. your body is shedding accumulated fatigue to reveal your new strength baseline.",
+      "active supercompensation is in full effect. keep the stress low and enjoy the easy week."
+    ]
+  };
+
+  const pool = specific[phase] || generic;
+  return pool[date.getDate() % pool.length];
+};
 
 export default function Home() {
   // --- State Variables ---
@@ -702,22 +738,25 @@ export default function Home() {
         {!cycleStartDate ? (
           <div className="bg-[#FFFFFF] border border-border-light rounded-md p-6">
             {/* Welcome Card */}
-            <div className="mb-6 p-4 bg-brand-soft rounded-md border border-brand-deep/10">
-              <h2 className="text-sm font-semibold text-brand-deep lowercase mb-1.5 flex items-center gap-2">
+            <div className="mb-6 p-5 bg-brand-soft rounded-lg border border-brand-deep/10 shadow-sm">
+              <h2 className="text-base font-semibold text-brand-deep lowercase mb-2 flex items-center gap-2">
                 <Target className="w-5 h-5" />
-                welcome to freebox
+                welcome to freebox, athlete
               </h2>
-              <p className="text-xs text-foreground/80 leading-relaxed lowercase">
-                freebox uses AI and sports science to build your training — adapting every session to how you slept, your energy, and your recovery. set up your profile below to begin an 11-week periodized cycle.
+              <p className="text-sm text-foreground/80 leading-relaxed lowercase mb-3">
+                i'm your AI sports scientist. i've designed freebox to build your training using real science—adapting every single session to how you slept, your energy levels, and your recovery. let's set up your baseline profile so we can kick off your first 11-week periodized cycle. i'm excited to work with you!
               </p>
-              <p className="text-[10px] text-text-secondary mt-2 lowercase font-mono">
-                all your data stays on this device. nothing is sent to external servers except the workout generation request.
-              </p>
+              <div className="flex items-start gap-2 p-3 bg-white/60 rounded border border-brand-deep/5">
+                <ShieldCheck className="w-4 h-4 text-brand-deep mt-0.5 shrink-0" />
+                <p className="text-[11px] text-text-secondary lowercase font-mono">
+                  privacy first: all your personal data stays right here on this device. i only send the necessary metrics to the lab (server) when synthesizing your next workout.
+                </p>
+              </div>
             </div>
 
-            <h3 className="text-base font-medium mb-3 lowercase">initialize periodization cycle</h3>
-            <p className="text-sm text-text-secondary mb-4 leading-relaxed">
-              Freebox utilizes an evidence-based sports science methodology with structured 11-week blocks. Enter your start date to calculate your training phases.
+            <h3 className="text-base font-medium mb-2 lowercase">let's initialize your cycle</h3>
+            <p className="text-sm text-text-secondary mb-4 leading-relaxed lowercase">
+              we'll be using an evidence-based 11-week block periodization model. just tell me when you want to start, and i'll map out all your training phases.
             </p>
             
             <form onSubmit={handleStartCycle} className="space-y-4">
@@ -846,9 +885,9 @@ export default function Home() {
 
               <button 
                 type="submit" 
-                className="w-full py-2 bg-brand-deep text-white hover:bg-opacity-90 font-medium rounded text-sm transition-opacity cursor-pointer lowercase"
+                className="w-full py-2.5 bg-brand-deep text-white hover:bg-opacity-90 font-medium rounded-lg text-sm transition-opacity cursor-pointer lowercase shadow-sm"
               >
-                start 11-week cycle
+                start my 11-week cycle
               </button>
             </form>
           </div>
@@ -947,16 +986,16 @@ export default function Home() {
             {todaysLog ? (
               <div className="space-y-6">
                 {/* Completion Status */}
-                <div className="bg-[#FFFFFF] border border-border-light rounded-md p-6 flex flex-col items-center text-center space-y-4">
-                  <div className="bg-brand-soft p-3 rounded-full">
-                    <Check className="w-6 h-6 text-brand-deep" />
+                <div className="bg-[#FFFFFF] border border-border-light rounded-lg p-6 flex flex-col items-center text-center space-y-4 shadow-sm">
+                  <div className="bg-green-50 p-4 rounded-full border border-green-100">
+                    <Check className="w-8 h-8 text-green-500" />
                   </div>
                   <div>
-                    <h3 className="text-base font-medium lowercase mb-1">
-                      {todaysLog.phase} / {todaysLog.dayName} — session logged
+                    <h3 className="text-lg font-medium lowercase mb-1 text-foreground">
+                      session logged. great work!
                     </h3>
-                    <p className="text-xs text-text-secondary lowercase leading-relaxed">
-                      your session data has been saved locally on this device. muscle protein synthesis peaks 24-48h post-stimulus — recovery is where adaptation happens.
+                    <p className="text-xs text-text-secondary lowercase leading-relaxed px-2">
+                      i've safely stored your session data on this device. remember, muscle protein synthesis peaks 24-48h post-stimulus—so your only job now is to recover and let the adaptation happen. i'm proud of the effort today.
                     </p>
                   </div>
 
@@ -985,11 +1024,11 @@ export default function Home() {
 
                 {/* Next Session Card */}
                 {tomorrowState && (
-                  <div className="bg-[#E6EEFF] border border-[#0055FF]/20 rounded-md p-5 space-y-3">
+                  <div className="bg-[#E6EEFF] border border-[#0055FF]/20 rounded-lg p-5 space-y-3 shadow-sm">
                     <h4 className="text-xs font-semibold text-[#0055FF] lowercase flex items-center gap-1.5 font-mono">
-                      <ArrowRight className="w-4 h-4" /> next session
+                      <ArrowRight className="w-4 h-4" /> next session preview
                     </h4>
-                    <div className="flex justify-between items-center text-xs">
+                    <div className="flex justify-between items-center text-sm">
                       <div className="text-[#0055FF]/90 lowercase">
                         <strong className="text-[#0055FF] font-semibold">
                           {(() => {
@@ -1000,12 +1039,12 @@ export default function Home() {
                         </strong>
                         {" "} — {tomorrowState.dayName}
                       </div>
-                      <span className="text-[10px] bg-white/50 px-2 py-0.5 rounded text-[#0055FF] font-mono lowercase">
+                      <span className="text-[10px] bg-white/60 px-2 py-1 rounded-md text-[#0055FF] font-mono lowercase shadow-sm">
                         {tomorrowState.dayType}
                       </span>
                     </div>
-                    <p className="text-xs text-[#0055FF]/70 leading-relaxed lowercase">
-                      open the app to check in your recovery signals. the constraint-compiler will synthesize your next protocol from the {tomorrowState.dayName} template.
+                    <p className="text-xs text-[#0055FF]/80 leading-relaxed lowercase mt-2">
+                      whenever you're ready tomorrow, open the app and log your recovery signals. i'll run the numbers through our constraint-compiler and synthesize a perfect protocol for your {tomorrowState.dayName} template. get some rest!
                     </p>
                   </div>
                 )}
@@ -1055,16 +1094,20 @@ export default function Home() {
               </div>
             ) : isRestDay ? (
               /* B. SUNDAY REST DAY VIEW */
-              <div className="bg-[#FFFFFF] border border-border-light rounded-md p-6 text-center">
-                <div className="w-12 h-12 bg-[#F9F9FB] rounded-full flex items-center justify-center mx-auto mb-3">
-                  <Moon className="w-7 h-7 text-text-secondary" />
+              <div className="bg-[#FFFFFF] border border-border-light rounded-lg p-6 text-center shadow-sm">
+                <div className="w-16 h-16 bg-brand-soft rounded-full flex items-center justify-center mx-auto mb-4 border border-brand-deep/10 shadow-sm">
+                  <Heart className="w-8 h-8 text-brand-deep" />
                 </div>
-                <h3 className="text-base font-medium mb-2 lowercase">rest day</h3>
-                <p className="text-sm text-text-secondary mb-4 leading-relaxed lowercase">
-                  Today is your scheduled passive rest day. There are no structured workouts. Walk lightly, stretch, and focus on nutrition and sleep quality.
+                <h3 className="text-lg font-medium mb-2 lowercase text-brand-deep">recovery protocol</h3>
+                <p className="text-sm text-text-secondary mb-5 leading-relaxed lowercase px-4">
+                  take it easy today. {getRecoveryMessage(cycleState.phase, activeDate)}
                 </p>
-                <div className="p-3 bg-brand-soft rounded text-xs text-brand-deep text-left leading-relaxed">
-                  <span className="font-medium lowercase">scientific note:</span> Active supercompensation occurs during rest. Without scheduled breaks, the central nervous system saturates, reducing muscle recruitment efficiency over time.
+                <div className="p-4 bg-[#F9F9FB] rounded-lg text-xs text-text-secondary text-left leading-relaxed border border-border-light shadow-inner">
+                  <div className="flex items-center gap-2 mb-2">
+                    <Activity className="w-4 h-4 text-brand-deep" />
+                    <span className="font-semibold text-foreground lowercase">from my lab notes:</span>
+                  </div>
+                  active supercompensation occurs during rest. without scheduled breaks, the central nervous system saturates, reducing muscle recruitment efficiency over time. i'll see you tomorrow for our next session!
                 </div>
               </div>
             ) : isSkillsDay ? (
@@ -1163,8 +1206,8 @@ export default function Home() {
                     <Sliders className="w-6 h-6" />
                   </div>
                   <div>
-                    <h3 className="text-base font-medium lowercase">readiness check-in</h3>
-                    <p className="text-xs text-text-secondary lowercase">20 seconds to calibrate today's training volume</p>
+                    <h3 className="text-base font-medium lowercase">how are we feeling today?</h3>
+                    <p className="text-xs text-text-secondary lowercase">take 20 seconds to give me your metrics, and i'll calibrate today's training volume for you.</p>
                   </div>
                 </div>
 
