@@ -97,6 +97,7 @@ export default function Home() {
   const [skills, setSkills] = useState<SkillState>({});
   
   const [userProfile, setUserProfile] = useState<UserProfile>({
+    name: "",
     age: "",
     weight: "",
     experience: "intermediate",
@@ -221,7 +222,7 @@ export default function Home() {
     const sd = localStorage.getItem("freebox_cycle_start");
     if (sp && !sd) {
       const profile = JSON.parse(sp);
-      if (profile.age && profile.weight) {
+      if (profile.name && profile.age && profile.weight) {
         const now = new Date();
         const autoDate = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
         localStorage.setItem("freebox_cycle_start", autoDate);
@@ -589,7 +590,9 @@ export default function Home() {
           <Image src="/freebox_logo.png" alt="Freebox Logo" width={64} height={64} className="opacity-90" />
           <div>
             <h1 className="text-xl font-medium tracking-tight text-foreground lowercase">freebox</h1>
-            <p className="text-xs text-text-secondary lowercase">a free-box in your pocket.</p>
+            <p className="text-xs text-text-secondary lowercase">
+              {userProfile.name ? `welcome, ${userProfile.name.toLowerCase()}` : "a free-box in your pocket."}
+            </p>
           </div>
         </div>
         
@@ -741,10 +744,10 @@ export default function Home() {
             <div className="mb-6 p-5 bg-brand-soft rounded-lg border border-brand-deep/10 shadow-sm">
               <h2 className="text-base font-semibold text-brand-deep lowercase mb-2 flex items-center gap-2">
                 <Target className="w-5 h-5" />
-                welcome to freebox, athlete
+                onboarding
               </h2>
               <p className="text-sm text-foreground/80 leading-relaxed lowercase mb-3">
-                i'm your AI sports scientist. i've designed freebox to build your training using real science—adapting every single session to how you slept, your energy levels, and your recovery. let's set up your baseline profile so we can kick off your first 11-week periodized cycle. i'm excited to work with you!
+                i'm your AI sports scientist. let's set up your profile so we can get to know each other and kick off your first 11-week periodized cycle. i'm excited to train with you.
               </p>
               <div className="flex items-start gap-2 p-3 bg-white/60 rounded border border-brand-deep/5">
                 <ShieldCheck className="w-4 h-4 text-brand-deep mt-0.5 shrink-0" />
@@ -760,13 +763,29 @@ export default function Home() {
             </p>
             
             <form onSubmit={handleStartCycle} className="space-y-4">
-              {(!userProfile.age || !userProfile.weight) ? (
+              {(!userProfile.name || !userProfile.age || !userProfile.weight) ? (
                 <div className="space-y-3 pb-4 border-b border-border-light">
                   <h3 className="text-sm font-medium lowercase flex items-center gap-2">
                     <User className="w-5 h-5 text-brand-deep" />
-                    athlete profile
+                    onboarding
                   </h3>
                   
+                  <div>
+                    <label className="block text-xs text-text-secondary mb-1 lowercase">what is your name?</label>
+                    <input 
+                      type="text" 
+                      value={userProfile.name || ""}
+                      onChange={(e) => {
+                        const updated = {...userProfile, name: e.target.value};
+                        setUserProfile(updated);
+                        localStorage.setItem("freebox_user_profile", JSON.stringify(updated));
+                      }}
+                      placeholder="e.g. John"
+                      required
+                      className="w-full px-3 py-2 border border-border-light rounded bg-[#FDFDFD] text-sm focus:outline-none focus:ring-1 focus:ring-brand-deep text-foreground font-mono"
+                    />
+                  </div>
+
                   <div className="grid grid-cols-2 gap-3">
                     <div>
                       <label className="block text-xs text-text-secondary mb-1 lowercase">age</label>
@@ -835,7 +854,7 @@ export default function Home() {
                   <div>
                     <span className="font-semibold text-foreground lowercase">athlete profile is active</span>
                     <div className="text-[10px] mt-0.5 font-mono">
-                      age: {userProfile.age} | weight: {userProfile.weight}kg | level: {userProfile.experience}
+                      name: {userProfile.name} | age: {userProfile.age} | weight: {userProfile.weight}kg | level: {userProfile.experience}
                     </div>
                   </div>
                   <button
@@ -1465,6 +1484,20 @@ export default function Home() {
                     <User className="w-4 h-4 text-brand-deep" />
                     athlete profile
                   </h3>
+                  <div>
+                    <label className="block text-[11px] text-text-secondary mb-1 lowercase font-mono">name</label>
+                    <input 
+                      type="text" 
+                      value={userProfile.name || ""}
+                      onChange={(e) => {
+                        const updated = { ...userProfile, name: e.target.value };
+                        setUserProfile(updated);
+                        localStorage.setItem("freebox_user_profile", JSON.stringify(updated));
+                      }}
+                      placeholder="e.g. John"
+                      className="w-full px-2.5 py-1.5 border border-border-light rounded bg-[#F9F9FB] text-xs focus:outline-none focus:ring-1 focus:ring-brand-deep text-foreground font-mono"
+                    />
+                  </div>
                   <div className="grid grid-cols-2 gap-3">
                     <div>
                       <label className="block text-[11px] text-text-secondary mb-1 lowercase font-mono">age</label>

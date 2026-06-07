@@ -92,7 +92,8 @@ export function buildUserPrompt({
   const prompt = `Generate a training session based on the following structured inputs:
 
 --- ATHLETE PROFILE & PERSONALIZATION ---
-${userProfile ? `Age: ${userProfile.age}
+${userProfile ? `Name: ${userProfile.name || "Athlete"}
+Age: ${userProfile.age}
 Bodyweight: ${userProfile.weight}
 Experience Level: ${userProfile.experience}
 Injuries or Limitations: ${userProfile.limitations || "None reported."}

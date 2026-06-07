@@ -196,6 +196,7 @@ export type LlmExerciseOutput = z.infer<typeof LlmExerciseOutputSchema>;
 export type LlmWorkoutOutput = z.infer<typeof LlmWorkoutOutputSchema>;
 
 export interface UserProfile {
+  name?: string;
   age: string;
   weight: string;
   experience: string;
