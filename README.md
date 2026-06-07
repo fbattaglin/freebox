@@ -2,25 +2,54 @@
   <img src="public/freebox_logo.png" alt="Freebox Logo" width="128" height="128" />
 </p>
 
-# 📦 Freebox — Deterministic AI Sports Periodization
+# 📦 Freebox — Autoregulated Block Periodization & Context-Adaptive Training Engine
 
 > **"Weniger, aber besser."** (Less, but better) — Dieter Rams. 
-> Freebox is a premium, Braun-inspired AI sports periodization coach. It bridges rigorous athletic periodization with context-distilled LLM adaptation. 
+> Freebox is a premium, Braun-inspired training engine. It fuses strict sports science and block periodization with context-aware LLM adaptation, delivering daily, auto-regulated workouts tailored to your exact systemic readiness and real-world environment.
 
 ---
 
 ## ⚡ The Philosophy
 
-Most AI fitness apps suffer from three fatal flaws:
-1. **Hallucinated Exercises**: LLMs invent fantasy workouts or suggest anatomically unsafe movements.
-2. **Context Bloat**: Feeding months of raw workout logs into a prompt exhausts token limits and dilutes attention.
-3. **Lack of Structure**: They act as chat interfaces instead of executing a strict, scientifically validated training system.
+Most AI fitness apps are built on flawed premises:
+1. **Hallucinated Progressions**: LLMs left unrestricted generate structurally incoherent workouts, ignore fatigue accumulation, or suggest anatomically unsafe movements.
+2. **Context Bloat**: Feeding months of raw workout logs into a prompt exhausts token limits, dilutes the LLM's attention, and degrades instruction adherence.
+3. **The "Gamified Chat" Trap**: They act as chat interfaces or badge-delivery systems instead of executing a strict, scientifically validated athletic plan.
 
-Freebox solves this by treating the LLM not as a creative generator, but as a **contextual adapter and constraint-matching engine** working within rigid mathematical boundaries.
+Freebox solves this by treating the LLM not as a creative generator, but as a **contextual adapter and constraint-resolution engine** working within rigid mathematical boundaries defined by exercise science.
 
 ---
 
-## 📐 Architecture: The Three-Layer Determinism
+## 🔬 The Sports Science Core
+
+Freebox is not built on fitness trends; it is codified directly from peer-reviewed sports science. The engine translates academic research into a deterministic training system:
+
+### 1. Block Periodization (Macrocyle Structure)
+Instead of chaotic daily variation, Freebox organizes your training into specialized, sequential blocks to maximize target adaptation while managing systemic fatigue.
+* **Foci**: Strength (neural drive), Hypertrophy (mechanical tension), Resistance (lactate tolerance & work density), and Explosive (Rate of Force Development - RFD).
+* **Literature Foundation**:
+  * **Bompa, T. O., & Buzzichelli, C. (2018).** *Periodization: Theory and Methodology of Training.* (Structuring developmental phases).
+  * **Issurin, V. B. (2008).** *Block Periodization: Breakthrough in Sport Training.* (Validation of concentrated load blocks vs. traditional concurrent training).
+
+### 2. Autoregulation & RIR (Volume Adaptation)
+Rather than blindly forcing arbitrary loads, Freebox dynamically adjusts volume (total sets) based on daily systemic readiness (sleep quality, perceived energy, and muscle soreness), while preserving planned intensity (% 1RM).
+* **Literature Foundation**:
+  * **Helms, E. R., et al. (2016).** *Application of the Repetitions in Reserve-Based Rating of Perceived Exertion Scale for Resistance Training.* (Establishes RIR/RPE as a highly reliable tool for autoregulating intensity and volume).
+  * **Selye, H. (1950).** *The Physiology and Pathology of Exposure to Stress.* (General Adaptation Syndrome - the framework for managing fatigue accumulation to avoid maladaptation).
+
+### 3. Prilepin's Table (Neuromuscular Load Management)
+The intensity and rep ranges for all primary lifts are governed by optimal volume zones originally analyzed by Soviet sports scientist A.S. Prilepin, ensuring maximum strength stimulus without overtaxing the Central Nervous System (CNS).
+* **Literature Foundation**:
+  * **Prilepin, A. S. (1974).** *Managing the Training of Weightlifters.* (The source code for matching intensity percentages to their optimal set and rep brackets).
+
+### 4. Progressive Gymnastic Adaptations (Saturday Skills)
+Saturday Calisthenics progressions utilize relative bodyweight strength scaling, systematically advancing motor patterns through progressive leverage adjustments rather than external loads.
+* **Literature Foundation**:
+  * **Low, S. (2016).** *Overcoming Gravity: A Systematic Approach to Gymnastics and Bodyweight Strength.*
+
+---
+
+## 📐 Architecture: The Three-Layer Engine
 
 Freebox decouples sports science rules, structural periodization, and LLM reasoning into three distinct layers to ensure methodology integrity.
 

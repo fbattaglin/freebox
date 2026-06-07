@@ -115,3 +115,23 @@ O sábado é dedicado a um treino sem cargas externas com foco em controle motor
 7. **Muscle-up family** (do pull-up explosivo ao muscle-up)
 
 As progressões são indexadas de 1 a 6 para cada família, permitindo evolução gradativa a cada ciclo de 11 semanas.
+
+---
+
+## Referências Bibliográficas
+
+Toda a lógica e prescrição de treino do Freebox é baseada na literatura clássica e contemporânea de fisiologia do exercício e treinamento de força:
+
+1. **Bompa, T. O., & Buzzichelli, C. (2018).** *Periodization: Theory and Methodology of Training*. Human Kinetics. (Base conceitual para a divisão de blocos, fases de força e deloads planejado).
+2. **Issurin, V. B. (2008).** *Block Periodization: Breakthrough in Sport Training*. Ultimate Athlete Concepts. (Fundamentação científica para o desenho de estímulos concentrados e sequenciais).
+3. **Schoenfeld, B. J. (2016).** *Science and Development of Muscle Hypertrophy*. Human Kinetics. (Parâmetros de volume, intensidade e intervalos de descanso para a fase de hipertrofia).
+4. **Schoenfeld, B. J., Grgic, J., Ogborn, D., & Krieger, J. W. (2017).** *Strength and Hypertrophy Adaptations Between Low- vs. High-Load Resistance Training: A Systematic Review and Meta-analysis*. Journal of Strength and Conditioning Research. (Definição de faixas de repetição e cargas efetivas).
+5. **Helms, E. R., Cronin, J., Storey, A., & Zourdos, M. C. (2016).** *Application of the Repetitions in Reserve-Based Rating of Perceived Exertion Scale for Resistance Training*. Sports Medicine. (Base para a autorregulação do volume através do feedback de prontidão do usuário).
+6. **American College of Sports Medicine (ACSM). (2009).** *Progression Models in Resistance Training for Healthy Adults*. Medicine & Science in Sports & Exercise. (Modelos de progressão de carga e intensidade relativa).
+7. **Campos, G. E., Luecke, T. J., Wendeln, H. K., Toma, K., Hagerman, F. C., Murray, T. F., ... & Staron, R. S. (2002).** *Muscular adaptations in response to three different resistance-training regimens: specificity on repetition maximum training zones*. European Journal of Applied Physiology. (Fisiologia por trás da fase de resistência e endurance muscular).
+8. **Stone, M. H., Stone, M., & Sands, W. A. (2007).** *Principles and Practice of Resistance Training*. Human Kinetics. (Fundamentos de acumulação de estresse biológico e supercompensação).
+9. **Cormie, P., McGuigan, M. R., & Newton, R. U. (2011).** *Developing maximal neuromuscular power: Part 1 - biological and biomechanical mechanisms*. Sports Medicine. (Mapeamento fisiológico da fase explosiva/taxa de desenvolvimento de força).
+10. **Low, S. (2016).** *Overcoming Gravity: A Systematic Approach to Gymnastics and Bodyweight Strength*. Battle Ground Creative. (Sistemas de progressão para calistenia, base das rotinas de sábado - Skills Day).
+11. **Prilepin, A. S. (1974).** *Managing the Training of Weightlifters*. (Diretrizes para distribuição de volume/intensidade nos levantamentos olímpicos e primários).
+12. **Selye, H. (1950).** *Stress: The Physiology and Pathology of Exposure to Stress*. Acta Medical Publishers. (Síndrome de Adaptação Geral - GAS: o modelo fisiológico de fadiga acumulada e recuperação que dita os blocos de Freebox).
+
