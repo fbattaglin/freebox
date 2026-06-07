@@ -589,7 +589,7 @@ export default function Home() {
       {/* Header */}
       <header className="mb-4 flex justify-between items-center border-b border-border-light pb-4">
         <div className="flex items-center gap-3">
-          <Image src="/freebox_logo.png" alt="Freebox Logo" width={64} height={64} className="opacity-90" />
+          <Image src="/freebox_logo.png" alt="Freebox Logo" width={70} height={70} className="opacity-90" />
           <div>
             <h1 className="text-xl font-medium tracking-tight text-foreground lowercase">freebox</h1>
             <p className="text-xs text-text-secondary lowercase">
