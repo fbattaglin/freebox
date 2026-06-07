@@ -1,0 +1,764 @@
+{
+  "$schema_version": "1.0",
+  "description": "Freebox 25 training templates. Mapped across 5 phases and 5 weekday slots. Sábado is dedicated to Saturday Skills based on a separate library. Cooldown and Warmup slots are standard.",
+  "templates": [
+    {
+      "phase": "strength",
+      "day": "Monday Lower",
+      "slots": [
+        { "type": "warmup", "duration_min": 8 },
+        { "type": "core_activation", "duration_min": 5 },
+        {
+          "type": "primary",
+          "pattern": "squat",
+          "sets": 3,
+          "reps": "3-5",
+          "intensity_pct_1rm": "80-87%",
+          "rest_min": 3.0
+        },
+        {
+          "type": "secondary",
+          "pattern": "hinge",
+          "sets": 3,
+          "reps": "5-8",
+          "intensity_pct_1rm": "75-80%",
+          "rest_min": 2.5
+        },
+        {
+          "type": "accessory",
+          "patterns": ["lunge", "core"],
+          "sets": 3,
+          "reps": "8-12",
+          "rest_min": 1.5
+        }
+      ]
+    },
+    {
+      "phase": "strength",
+      "day": "Tuesday Upper",
+      "slots": [
+        { "type": "warmup", "duration_min": 8 },
+        { "type": "core_activation", "duration_min": 5 },
+        {
+          "type": "primary",
+          "pattern": "push_h",
+          "sets": 3,
+          "reps": "3-5",
+          "intensity_pct_1rm": "80-87%",
+          "rest_min": 3.0
+        },
+        {
+          "type": "secondary",
+          "pattern": "pull_v",
+          "sets": 3,
+          "reps": "5-8",
+          "rest_min": 2.5
+        },
+        {
+          "type": "accessory",
+          "patterns": ["push_v", "pull_h", "isolation"],
+          "sets": 3,
+          "reps": "8-12",
+          "rest_min": 1.5
+        }
+      ]
+    },
+    {
+      "phase": "strength",
+      "day": "Wednesday Full",
+      "slots": [
+        { "type": "warmup", "duration_min": 8 },
+        { "type": "core_activation", "duration_min": 5 },
+        {
+          "type": "primary",
+          "pattern": "hinge",
+          "sets": 3,
+          "reps": "3-5",
+          "intensity_pct_1rm": "80-87%",
+          "rest_min": 3.5
+        },
+        {
+          "type": "secondary",
+          "pattern": "push_v",
+          "sets": 3,
+          "reps": "5-8",
+          "intensity_pct_1rm": "75-80%",
+          "rest_min": 3.0
+        },
+        {
+          "type": "accessory",
+          "patterns": ["pull_h", "core"],
+          "sets": 3,
+          "reps": "8-12",
+          "rest_min": 1.5
+        }
+      ]
+    },
+    {
+      "phase": "strength",
+      "day": "Thursday Lower",
+      "slots": [
+        { "type": "warmup", "duration_min": 8 },
+        { "type": "core_activation", "duration_min": 5 },
+        {
+          "type": "primary",
+          "pattern": "hinge",
+          "sets": 3,
+          "reps": "3-5",
+          "intensity_pct_1rm": "80-87%",
+          "rest_min": 3.0
+        },
+        {
+          "type": "secondary",
+          "pattern": "lunge",
+          "sets": 3,
+          "reps": "6-8",
+          "rest_min": 2.5
+        },
+        {
+          "type": "accessory",
+          "patterns": ["squat", "core"],
+          "sets": 3,
+          "reps": "8-12",
+          "rest_min": 1.5
+        }
+      ]
+    },
+    {
+      "phase": "strength",
+      "day": "Friday Upper",
+      "slots": [
+        { "type": "warmup", "duration_min": 8 },
+        { "type": "core_activation", "duration_min": 5 },
+        {
+          "type": "primary",
+          "pattern": "pull_v",
+          "sets": 3,
+          "reps": "3-5",
+          "rest_min": 3.0
+        },
+        {
+          "type": "secondary",
+          "pattern": "push_v",
+          "sets": 3,
+          "reps": "5-8",
+          "intensity_pct_1rm": "75-80%",
+          "rest_min": 2.5
+        },
+        {
+          "type": "accessory",
+          "patterns": ["push_h", "pull_h", "isolation"],
+          "sets": 3,
+          "reps": "8-12",
+          "rest_min": 1.5
+        }
+      ]
+    },
+    {
+      "phase": "hypertrophy",
+      "day": "Monday Lower",
+      "slots": [
+        { "type": "warmup", "duration_min": 8 },
+        { "type": "core_activation", "duration_min": 5 },
+        {
+          "type": "primary",
+          "pattern": "squat",
+          "sets": 3,
+          "reps": "6-8",
+          "intensity_pct_1rm": "75-80%",
+          "rest_min": 2.0
+        },
+        {
+          "type": "secondary",
+          "pattern": "hinge",
+          "sets": 3,
+          "reps": "8-12",
+          "intensity_pct_1rm": "70-75%",
+          "rest_min": 2.0
+        },
+        {
+          "type": "accessory",
+          "patterns": ["lunge", "core"],
+          "sets": 3,
+          "reps": "10-12",
+          "rest_min": 1.5
+        }
+      ]
+    },
+    {
+      "phase": "hypertrophy",
+      "day": "Tuesday Upper",
+      "slots": [
+        { "type": "warmup", "duration_min": 8 },
+        { "type": "core_activation", "duration_min": 5 },
+        {
+          "type": "primary",
+          "pattern": "push_h",
+          "sets": 3,
+          "reps": "6-8",
+          "intensity_pct_1rm": "75-80%",
+          "rest_min": 2.0
+        },
+        {
+          "type": "secondary",
+          "pattern": "pull_v",
+          "sets": 3,
+          "reps": "8-12",
+          "rest_min": 2.0
+        },
+        {
+          "type": "accessory",
+          "patterns": ["push_v", "pull_h", "isolation"],
+          "sets": 3,
+          "reps": "10-12",
+          "rest_min": 1.5
+        }
+      ]
+    },
+    {
+      "phase": "hypertrophy",
+      "day": "Wednesday Full",
+      "slots": [
+        { "type": "warmup", "duration_min": 8 },
+        { "type": "core_activation", "duration_min": 5 },
+        {
+          "type": "primary",
+          "pattern": "hinge",
+          "sets": 3,
+          "reps": "6-8",
+          "intensity_pct_1rm": "75-80%",
+          "rest_min": 2.5
+        },
+        {
+          "type": "secondary",
+          "pattern": "push_v",
+          "sets": 3,
+          "reps": "8-12",
+          "intensity_pct_1rm": "70-75%",
+          "rest_min": 2.0
+        },
+        {
+          "type": "accessory",
+          "patterns": ["pull_h", "core"],
+          "sets": 3,
+          "reps": "10-12",
+          "rest_min": 1.5
+        }
+      ]
+    },
+    {
+      "phase": "hypertrophy",
+      "day": "Thursday Lower",
+      "slots": [
+        { "type": "warmup", "duration_min": 8 },
+        { "type": "core_activation", "duration_min": 5 },
+        {
+          "type": "primary",
+          "pattern": "hinge",
+          "sets": 3,
+          "reps": "6-8",
+          "intensity_pct_1rm": "75-80%",
+          "rest_min": 2.0
+        },
+        {
+          "type": "secondary",
+          "pattern": "lunge",
+          "sets": 3,
+          "reps": "8-12",
+          "rest_min": 2.0
+        },
+        {
+          "type": "accessory",
+          "patterns": ["squat", "core"],
+          "sets": 3,
+          "reps": "10-12",
+          "rest_min": 1.5
+        }
+      ]
+    },
+    {
+      "phase": "hypertrophy",
+      "day": "Friday Upper",
+      "slots": [
+        { "type": "warmup", "duration_min": 8 },
+        { "type": "core_activation", "duration_min": 5 },
+        {
+          "type": "primary",
+          "pattern": "pull_v",
+          "sets": 3,
+          "reps": "6-8",
+          "rest_min": 2.0
+        },
+        {
+          "type": "secondary",
+          "pattern": "push_v",
+          "sets": 3,
+          "reps": "8-12",
+          "intensity_pct_1rm": "70-75%",
+          "rest_min": 2.0
+        },
+        {
+          "type": "accessory",
+          "patterns": ["push_h", "pull_h", "isolation"],
+          "sets": 3,
+          "reps": "10-12",
+          "rest_min": 1.5
+        }
+      ]
+    },
+    {
+      "phase": "resistance",
+      "day": "Monday Lower",
+      "slots": [
+        { "type": "warmup", "duration_min": 8 },
+        { "type": "core_activation", "duration_min": 5 },
+        {
+          "type": "primary",
+          "pattern": "squat",
+          "sets": 3,
+          "reps": "15-20",
+          "intensity_pct_1rm": "55-60%",
+          "rest_min": 1.0
+        },
+        {
+          "type": "secondary",
+          "pattern": "hinge",
+          "sets": 3,
+          "reps": "15-20",
+          "intensity_pct_1rm": "50-55%",
+          "rest_min": 1.0
+        },
+        {
+          "type": "accessory",
+          "patterns": ["lunge", "core"],
+          "sets": 3,
+          "reps": "15-20",
+          "rest_min": 1.0
+        }
+      ]
+    },
+    {
+      "phase": "resistance",
+      "day": "Tuesday Upper",
+      "slots": [
+        { "type": "warmup", "duration_min": 8 },
+        { "type": "core_activation", "duration_min": 5 },
+        {
+          "type": "primary",
+          "pattern": "push_h",
+          "sets": 3,
+          "reps": "15-20",
+          "intensity_pct_1rm": "55-60%",
+          "rest_min": 1.0
+        },
+        {
+          "type": "secondary",
+          "pattern": "pull_v",
+          "sets": 3,
+          "reps": "15-20",
+          "rest_min": 1.0
+        },
+        {
+          "type": "accessory",
+          "patterns": ["push_v", "pull_h", "isolation"],
+          "sets": 3,
+          "reps": "15-20",
+          "rest_min": 1.0
+        }
+      ]
+    },
+    {
+      "phase": "resistance",
+      "day": "Wednesday Full",
+      "slots": [
+        { "type": "warmup", "duration_min": 8 },
+        { "type": "core_activation", "duration_min": 5 },
+        {
+          "type": "primary",
+          "pattern": "hinge",
+          "sets": 3,
+          "reps": "15-20",
+          "intensity_pct_1rm": "55-60%",
+          "rest_min": 1.0
+        },
+        {
+          "type": "secondary",
+          "pattern": "push_v",
+          "sets": 3,
+          "reps": "15-20",
+          "intensity_pct_1rm": "50-55%",
+          "rest_min": 1.0
+        },
+        {
+          "type": "accessory",
+          "patterns": ["pull_h", "core"],
+          "sets": 3,
+          "reps": "15-20",
+          "rest_min": 1.0
+        }
+      ]
+    },
+    {
+      "phase": "resistance",
+      "day": "Thursday Lower",
+      "slots": [
+        { "type": "warmup", "duration_min": 8 },
+        { "type": "core_activation", "duration_min": 5 },
+        {
+          "type": "primary",
+          "pattern": "hinge",
+          "sets": 3,
+          "reps": "15-20",
+          "intensity_pct_1rm": "55-60%",
+          "rest_min": 1.0
+        },
+        {
+          "type": "secondary",
+          "pattern": "lunge",
+          "sets": 3,
+          "reps": "15-20",
+          "rest_min": 1.0
+        },
+        {
+          "type": "accessory",
+          "patterns": ["squat", "core"],
+          "sets": 3,
+          "reps": "15-20",
+          "rest_min": 1.0
+        }
+      ]
+    },
+    {
+      "phase": "resistance",
+      "day": "Friday Upper",
+      "slots": [
+        { "type": "warmup", "duration_min": 8 },
+        { "type": "core_activation", "duration_min": 5 },
+        {
+          "type": "primary",
+          "pattern": "pull_v",
+          "sets": 3,
+          "reps": "15-20",
+          "rest_min": 1.0
+        },
+        {
+          "type": "secondary",
+          "pattern": "push_v",
+          "sets": 3,
+          "reps": "15-20",
+          "intensity_pct_1rm": "50-55%",
+          "rest_min": 1.0
+        },
+        {
+          "type": "accessory",
+          "patterns": ["push_h", "pull_h", "isolation"],
+          "sets": 3,
+          "reps": "15-20",
+          "rest_min": 1.0
+        }
+      ]
+    },
+    {
+      "phase": "explosive",
+      "day": "Monday Lower",
+      "slots": [
+        { "type": "warmup", "duration_min": 8 },
+        { "type": "core_activation", "duration_min": 5 },
+        {
+          "type": "primary",
+          "pattern": "plyo",
+          "sets": 4,
+          "reps": "3-5",
+          "rest_min": 2.0
+        },
+        {
+          "type": "secondary",
+          "pattern": "squat",
+          "sets": 3,
+          "reps": "3-5",
+          "intensity_pct_1rm": "50-60%",
+          "rest_min": 2.5
+        },
+        {
+          "type": "accessory",
+          "patterns": ["hinge", "core"],
+          "sets": 3,
+          "reps": "6-8",
+          "rest_min": 1.5
+        }
+      ]
+    },
+    {
+      "phase": "explosive",
+      "day": "Tuesday Upper",
+      "slots": [
+        { "type": "warmup", "duration_min": 8 },
+        { "type": "core_activation", "duration_min": 5 },
+        {
+          "type": "primary",
+          "pattern": "plyo",
+          "sets": 4,
+          "reps": "5-8",
+          "rest_min": 2.0
+        },
+        {
+          "type": "secondary",
+          "pattern": "push_h",
+          "sets": 3,
+          "reps": "3-5",
+          "intensity_pct_1rm": "50-60%",
+          "rest_min": 2.5
+        },
+        {
+          "type": "accessory",
+          "patterns": ["pull_v", "pull_h"],
+          "sets": 3,
+          "reps": "6-8",
+          "rest_min": 1.5
+        }
+      ]
+    },
+    {
+      "phase": "explosive",
+      "day": "Wednesday Full",
+      "slots": [
+        { "type": "warmup", "duration_min": 8 },
+        { "type": "core_activation", "duration_min": 5 },
+        {
+          "type": "primary",
+          "pattern": "hinge",
+          "sets": 3,
+          "reps": "3-5",
+          "intensity_pct_1rm": "50-60%",
+          "rest_min": 3.0
+        },
+        {
+          "type": "secondary",
+          "pattern": "push_v",
+          "sets": 3,
+          "reps": "3-5",
+          "intensity_pct_1rm": "40-50%",
+          "rest_min": 2.5
+        },
+        {
+          "type": "accessory",
+          "patterns": ["plyo", "core"],
+          "sets": 3,
+          "reps": "6-8",
+          "rest_min": 1.5
+        }
+      ]
+    },
+    {
+      "phase": "explosive",
+      "day": "Thursday Lower",
+      "slots": [
+        { "type": "warmup", "duration_min": 8 },
+        { "type": "core_activation", "duration_min": 5 },
+        {
+          "type": "primary",
+          "pattern": "plyo",
+          "sets": 4,
+          "reps": "3-5",
+          "rest_min": 2.0
+        },
+        {
+          "type": "secondary",
+          "pattern": "hinge",
+          "sets": 3,
+          "reps": "3-5",
+          "intensity_pct_1rm": "50-60%",
+          "rest_min": 2.5
+        },
+        {
+          "type": "accessory",
+          "patterns": ["lunge", "core"],
+          "sets": 3,
+          "reps": "6-8",
+          "rest_min": 1.5
+        }
+      ]
+    },
+    {
+      "phase": "explosive",
+      "day": "Friday Upper",
+      "slots": [
+        { "type": "warmup", "duration_min": 8 },
+        { "type": "core_activation", "duration_min": 5 },
+        {
+          "type": "primary",
+          "pattern": "plyo",
+          "sets": 4,
+          "reps": "5-8",
+          "rest_min": 2.0
+        },
+        {
+          "type": "secondary",
+          "pattern": "pull_v",
+          "sets": 3,
+          "reps": "3-5",
+          "rest_min": 2.5
+        },
+        {
+          "type": "accessory",
+          "patterns": ["push_v", "pull_h"],
+          "sets": 3,
+          "reps": "6-8",
+          "rest_min": 1.5
+        }
+      ]
+    },
+    {
+      "phase": "deload",
+      "day": "Monday Lower",
+      "slots": [
+        { "type": "warmup", "duration_min": 8 },
+        { "type": "core_activation", "duration_min": 5 },
+        {
+          "type": "primary",
+          "pattern": "squat",
+          "sets": 2,
+          "reps": "5",
+          "intensity_pct_1rm": "60-70%",
+          "rest_min": 3.0
+        },
+        {
+          "type": "secondary",
+          "pattern": "hinge",
+          "sets": 2,
+          "reps": "6",
+          "intensity_pct_1rm": "60-65%",
+          "rest_min": 2.5
+        },
+        {
+          "type": "accessory",
+          "patterns": ["lunge", "core"],
+          "sets": 2,
+          "reps": "8",
+          "rest_min": 1.5
+        }
+      ]
+    },
+    {
+      "phase": "deload",
+      "day": "Tuesday Upper",
+      "slots": [
+        { "type": "warmup", "duration_min": 8 },
+        { "type": "core_activation", "duration_min": 5 },
+        {
+          "type": "primary",
+          "pattern": "push_h",
+          "sets": 2,
+          "reps": "5",
+          "intensity_pct_1rm": "60-70%",
+          "rest_min": 3.0
+        },
+        {
+          "type": "secondary",
+          "pattern": "pull_v",
+          "sets": 2,
+          "reps": "6",
+          "rest_min": 2.5
+        },
+        {
+          "type": "accessory",
+          "patterns": ["push_v", "pull_h", "isolation"],
+          "sets": 2,
+          "reps": "8",
+          "rest_min": 1.5
+        }
+      ]
+    },
+    {
+      "phase": "deload",
+      "day": "Wednesday Full",
+      "slots": [
+        { "type": "warmup", "duration_min": 8 },
+        { "type": "core_activation", "duration_min": 5 },
+        {
+          "type": "primary",
+          "pattern": "hinge",
+          "sets": 2,
+          "reps": "5",
+          "intensity_pct_1rm": "60-70%",
+          "rest_min": 3.0
+        },
+        {
+          "type": "secondary",
+          "pattern": "push_v",
+          "sets": 2,
+          "reps": "6",
+          "intensity_pct_1rm": "60-65%",
+          "rest_min": 2.5
+        },
+        {
+          "type": "accessory",
+          "patterns": ["pull_h", "core"],
+          "sets": 2,
+          "reps": "8",
+          "rest_min": 1.5
+        }
+      ]
+    },
+    {
+      "phase": "deload",
+      "day": "Thursday Lower",
+      "slots": [
+        { "type": "warmup", "duration_min": 8 },
+        { "type": "core_activation", "duration_min": 5 },
+        {
+          "type": "primary",
+          "pattern": "hinge",
+          "sets": 2,
+          "reps": "5",
+          "intensity_pct_1rm": "60-70%",
+          "rest_min": 3.0
+        },
+        {
+          "type": "secondary",
+          "pattern": "lunge",
+          "sets": 2,
+          "reps": "6",
+          "rest_min": 2.5
+        },
+        {
+          "type": "accessory",
+          "patterns": ["squat", "core"],
+          "sets": 2,
+          "reps": "8",
+          "rest_min": 1.5
+        }
+      ]
+    },
+    {
+      "phase": "deload",
+      "day": "Friday Upper",
+      "slots": [
+        { "type": "warmup", "duration_min": 8 },
+        { "type": "core_activation", "duration_min": 5 },
+        {
+          "type": "primary",
+          "pattern": "pull_v",
+          "sets": 2,
+          "reps": "5",
+          "rest_min": 3.0
+        },
+        {
+          "type": "secondary",
+          "pattern": "push_v",
+          "sets": 2,
+          "reps": "6",
+          "intensity_pct_1rm": "60-65%",
+          "rest_min": 2.5
+        },
+        {
+          "type": "accessory",
+          "patterns": ["push_h", "pull_h", "isolation"],
+          "sets": 2,
+          "reps": "8",
+          "rest_min": 1.5
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,391 @@
+{
+  "$schema_version": "1.0",
+  "description": "Freebox curated calisthenics skill progression library. Each family progresses from level 1 (easiest) to level 6 (advanced). Saturday focus is to level up through these paths.",
+  "families": [
+    {
+      "id": "pullup_family",
+      "name": "Pull-up family",
+      "name_pt": "Família da barra fixa",
+      "levels": [
+        {
+          "level": 1,
+          "id": "australian_pullup",
+          "name": "Australian pull-up",
+          "name_pt": "Remada australiana",
+          "description": "Horizontal row using a low bar. Keep the body perfectly straight from heels to head.",
+          "target": "3 sets of 12 strict repetitions"
+        },
+        {
+          "level": 2,
+          "id": "jackknife_pullup",
+          "name": "Jackknife pull-up",
+          "name_pt": "Barra jackknife",
+          "description": "Vertical pull with heels supported on a bench in front of you to reduce active bodyweight.",
+          "target": "3 sets of 10 strict repetitions"
+        },
+        {
+          "level": 3,
+          "id": "negative_pullup",
+          "name": "Negative pull-up",
+          "name_pt": "Barra fixa negativa",
+          "description": "Jump to the top position (chin over bar) and perform a controlled eccentric descent lasting exactly 5 seconds.",
+          "target": "3 sets of 6 controlled negative repetitions"
+        },
+        {
+          "level": 4,
+          "id": "chinup",
+          "name": "Chin-up",
+          "name_pt": "Barra fixa supinada",
+          "description": "Strict vertical pull with an underhand grip (palms facing you). Full dead-hang at the bottom.",
+          "target": "3 sets of 8 strict repetitions"
+        },
+        {
+          "level": 5,
+          "id": "strict_pullup",
+          "name": "Strict pull-up",
+          "name_pt": "Barra fixa pronada",
+          "description": "Strict vertical pull with an overhand grip (palms facing away), zero body kipping allowed.",
+          "target": "3 sets of 8 strict repetitions"
+        },
+        {
+          "level": 6,
+          "id": "weighted_pullup",
+          "name": "Weighted pull-up",
+          "name_pt": "Barra fixa com carga",
+          "description": "Strict vertical pull using external load (weight belt or dumbbell between feet).",
+          "target": "3 sets of 6 strict reps with +10% bodyweight"
+        }
+      ]
+    },
+    {
+      "id": "dip_family",
+      "name": "Dip family",
+      "name_pt": "Família das paralelas",
+      "levels": [
+        {
+          "level": 1,
+          "id": "bench_dip",
+          "name": "Bench dip",
+          "name_pt": "Mergulho no banco",
+          "description": "Arm support behind body on a bench, feet on floor. Keep hips close to the bench.",
+          "target": "3 sets of 15 repetitions"
+        },
+        {
+          "level": 2,
+          "id": "feet_elevated_bench_dip",
+          "name": "Feet-elevated bench dip",
+          "name_pt": "Mergulho no banco com pés elevados",
+          "description": "Tricep dip with hands on one bench and heels elevated on another bench in front.",
+          "target": "3 sets of 12 repetitions"
+        },
+        {
+          "level": 3,
+          "id": "jumping_dip_negative",
+          "name": "Jumping dip with slow negative",
+          "name_pt": "Mergulho negativo nas paralelas",
+          "description": "Jump to the top of parallel bars and lower your body slowly for 5 seconds per rep.",
+          "target": "3 sets of 8 controlled repetitions"
+        },
+        {
+          "level": 4,
+          "id": "strict_bar_dip",
+          "name": "Strict bar dip",
+          "name_pt": "Mergulho nas paralelas",
+          "description": "Strict parallel bar dip. Lower until shoulders pass below the elbow crease.",
+          "target": "3 sets of 10 strict repetitions"
+        },
+        {
+          "level": 5,
+          "id": "ring_dip",
+          "name": "Ring dip",
+          "name_pt": "Mergulho nas argolas",
+          "description": "Strict dip performed on suspended gymnastics rings. Requires active shoulder stabilization.",
+          "target": "3 sets of 8 strict repetitions"
+        },
+        {
+          "level": 6,
+          "id": "weighted_bar_dip",
+          "name": "Weighted bar dip",
+          "name_pt": "Mergulho nas paralelas com carga",
+          "description": "Strict parallel bar dip using external load attached to the waist.",
+          "target": "3 sets of 6 strict reps with +15% bodyweight"
+        }
+      ]
+    },
+    {
+      "id": "handstand_family",
+      "name": "Handstand family",
+      "name_pt": "Família da parada de mão",
+      "levels": [
+        {
+          "level": 1,
+          "id": "pike_hold_floor",
+          "name": "Pike hold on floor",
+          "name_pt": "Pike hold no solo",
+          "description": "Inverted V position with feet and hands on floor, pushing active shoulders away from ground.",
+          "target": "3 sets of 40 seconds hold"
+        },
+        {
+          "level": 2,
+          "id": "pike_hold_elevated",
+          "name": "Pike hold with feet elevated",
+          "name_pt": "Pike hold com pés elevados",
+          "description": "Hands on floor, feet on box. Walk hands close to box to stack hips directly over shoulders.",
+          "target": "3 sets of 40 seconds hold"
+        },
+        {
+          "level": 3,
+          "id": "wall_walk_handstand",
+          "name": "Wall walk to handstand",
+          "name_pt": "Caminhada na parede para bananeira",
+          "description": "Start in push-up position with feet against wall. Walk feet up and hands toward the wall.",
+          "target": "3 sets of 30 seconds hold near the wall"
+        },
+        {
+          "level": 4,
+          "id": "kickup_handstand_wall",
+          "name": "Kick-up to handstand against wall",
+          "name_pt": "Parada de mãos na parede",
+          "description": "Face wall and kick legs up to enter handstand, resting heels lightly on wall.",
+          "target": "3 sets of 45 seconds stable hold"
+        },
+        {
+          "level": 5,
+          "id": "hspu_wall",
+          "name": "Handstand push-up against wall",
+          "name_pt": "Flexão bananeira assistida",
+          "description": "Vertical handstand push-up against wall. Head touches floor lightly at bottom before pressing up.",
+          "target": "3 sets of 6 strict repetitions"
+        },
+        {
+          "level": 6,
+          "id": "freestanding_handstand",
+          "name": "Freestanding handstand",
+          "name_pt": "Parada de mãos livre",
+          "description": "Balance in handstand without wall or external support. Stabilize using finger pressure.",
+          "target": "3 sets of 15 seconds free balance"
+        }
+      ]
+    },
+    {
+      "id": "pistol_family",
+      "name": "Pistol squat family",
+      "name_pt": "Família do agachamento unilateral",
+      "levels": [
+        {
+          "level": 1,
+          "id": "assisted_squat",
+          "name": "Assisted squat",
+          "name_pt": "Agachamento bilateral assistido",
+          "description": "Deep bilateral squat holding straps or poles in front for balance and weight relief.",
+          "target": "3 sets of 15 deep repetitions"
+        },
+        {
+          "level": 2,
+          "id": "step_down",
+          "name": "Step-down",
+          "name_pt": "Step-down controlado",
+          "description": "Stand on a 20cm box. Lower one heel to touch the ground slowly under control, then drive back up.",
+          "target": "3 sets of 10 repetitions per leg"
+        },
+        {
+          "level": 3,
+          "id": "counterbalanced_pistol",
+          "name": "Counterbalanced pistol squat",
+          "name_pt": "Pistol com contrapeso",
+          "description": "Single-leg squat extending free leg forward, holding a 3-5kg weight with straight arms as counterbalance.",
+          "target": "3 sets of 6 repetitions per leg"
+        },
+        {
+          "level": 4,
+          "id": "pistol_on_box",
+          "name": "Strict pistol squat on box",
+          "name_pt": "Pistol squat na caixa",
+          "description": "Perform a pistol squat standing on a bench or box. Let the free leg hang down off the side to reduce flexibility demand.",
+          "target": "3 sets of 8 repetitions per leg"
+        },
+        {
+          "level": 5,
+          "id": "strict_pistol",
+          "name": "Strict pistol squat",
+          "name_pt": "Pistol squat livre",
+          "description": "Deep single-leg squat on flat ground. Free leg must remain parallel to floor without touching.",
+          "target": "3 sets of 8 repetitions per leg"
+        },
+        {
+          "level": 6,
+          "id": "weighted_pistol",
+          "name": "Weighted pistol squat",
+          "name_pt": "Pistol squat com carga",
+          "description": "Deep single-leg squat holding a heavy dumbbell or kettlebell close to the chest.",
+          "target": "3 sets of 5 repetitions per leg"
+        }
+      ]
+    },
+    {
+      "id": "lsit_family",
+      "name": "L-sit family",
+      "name_pt": "Família do L-sit",
+      "levels": [
+        {
+          "level": 1,
+          "id": "tuck_hanging_raise",
+          "name": "Tuck hanging leg raise",
+          "name_pt": "Elevação de joelhos suspenso",
+          "description": "Hanging from a bar, pull knees up to chest slowly under control without swinging.",
+          "target": "3 sets of 12 reps without swing"
+        },
+        {
+          "level": 2,
+          "id": "hanging_leg_raise",
+          "name": "Strict hanging leg raise",
+          "name_pt": "Elevação de pernas suspenso",
+          "description": "Hanging from a bar, lift straight legs until parallel to floor. Control descent.",
+          "target": "3 sets of 8 reps without swing"
+        },
+        {
+          "level": 3,
+          "id": "tuck_lsit_parallettes",
+          "name": "Tuck L-sit on parallettes/bench",
+          "name_pt": "L-sit agrupado nas paralelas",
+          "description": "On parallettes or bench, depress shoulders actively and hold hips off support with knees tucked to chest.",
+          "target": "3 sets of 20 seconds hold"
+        },
+        {
+          "level": 4,
+          "id": "single_leg_lsit_floor",
+          "name": "Single-leg L-sit on floor",
+          "name_pt": "L-sit unilateral no chão",
+          "description": "Seated on floor, hands next to hips. Push floor away to lift hips and one straight leg, keeping other knee bent.",
+          "target": "3 sets of 20 seconds per leg"
+        },
+        {
+          "level": 5,
+          "id": "strict_lsit_parallettes",
+          "name": "Strict L-sit on parallettes",
+          "name_pt": "L-sit estrito nas paralelas",
+          "description": "On parallettes, support body weight with active shoulders and hold straight legs at a 90-degree angle.",
+          "target": "3 sets of 20 seconds hold"
+        },
+        {
+          "level": 6,
+          "id": "strict_lsit_floor",
+          "name": "Strict L-sit on floor",
+          "name_pt": "L-sit estrito no solo",
+          "description": "Seated on floor with straight legs, hands next to thighs. Press ground to lift entire body and straight legs to 90 degrees.",
+          "target": "3 sets of 15 seconds hold"
+        }
+      ]
+    },
+    {
+      "id": "frontlever_family",
+      "name": "Front lever family",
+      "name_pt": "Família do front lever",
+      "levels": [
+        {
+          "level": 1,
+          "id": "scapular_pull",
+          "name": "Active scapular pull",
+          "name_pt": "Depressão escapular na barra",
+          "description": "Hanging straight-armed from bar, depress scapulae to pull chest up without bending elbows.",
+          "target": "3 sets of 12 repetitions"
+        },
+        {
+          "level": 2,
+          "id": "tuck_front_lever",
+          "name": "Tuck front lever hold",
+          "name_pt": "Front lever agrupado",
+          "description": "Hang from bar, pull yourself upside down and hold torso completely horizontal with knees tucked tightly to chest.",
+          "target": "3 sets of 15 seconds hold"
+        },
+        {
+          "level": 3,
+          "id": "adv_tuck_front_lever",
+          "name": "Advanced tuck front lever",
+          "name_pt": "Front lever agrupado avançado",
+          "description": "Same as tuck front lever, but open knee angle slightly and extend hips, keeping back completely flat.",
+          "target": "3 sets of 15 seconds hold"
+        },
+        {
+          "level": 4,
+          "id": "single_leg_front_lever",
+          "name": "Single-leg front lever",
+          "name_pt": "Front lever unilateral",
+          "description": "Hold body horizontal on bar with one leg straight in line with torso and the other tucked to chest.",
+          "target": "3 sets of 10 seconds hold per leg"
+        },
+        {
+          "level": 5,
+          "id": "straddle_front_lever",
+          "name": "Straddle front lever",
+          "name_pt": "Front lever pernas afastadas",
+          "description": "Hold body horizontal on bar with straight legs spread wide to reduce leverage difficulty.",
+          "target": "3 sets of 10 seconds hold"
+        },
+        {
+          "level": 6,
+          "id": "full_front_lever",
+          "name": "Full front lever",
+          "name_pt": "Front lever completo",
+          "description": "Hold body completely straight and horizontal suspended under the bar with straight arms pulling active lats.",
+          "target": "3 sets of 8 seconds strict hold"
+        }
+      ]
+    },
+    {
+      "id": "muscleup_family",
+      "name": "Muscle-up family",
+      "name_pt": "Família do muscle-up",
+      "levels": [
+        {
+          "level": 1,
+          "id": "chest_to_bar",
+          "name": "Strict chest-to-bar pull-up",
+          "name_pt": "Barra fixa peito na barra",
+          "description": "Strict vertical pull bringing lower chest (sternum) to touch the bar.",
+          "target": "3 sets of 8 strict repetitions"
+        },
+        {
+          "level": 2,
+          "id": "high_pullup",
+          "name": "Strict high pull-up",
+          "name_pt": "Barra alta explosiva",
+          "description": "Vertical pull with maximum concentric velocity, pulling bar to lower ribs or navel level.",
+          "target": "3 sets of 5 explosive repetitions"
+        },
+        {
+          "level": 3,
+          "id": "russian_dip",
+          "name": "Russian dip",
+          "name_pt": "Mergulho russo",
+          "description": "On parallel bars, drop down to rest forearms on bars, lean forward, and press back up to high dip position.",
+          "target": "3 sets of 8 strict repetitions"
+        },
+        {
+          "level": 4,
+          "id": "assisted_bar_muscleup",
+          "name": "Assisted bar muscle-up",
+          "name_pt": "Bar muscle-up assistido",
+          "description": "Transition over the bar with assistance band under feet to reduce velocity requirement.",
+          "target": "3 sets of 6 controlled repetitions"
+        },
+        {
+          "level": 5,
+          "id": "strict_bar_muscleup",
+          "name": "Strict bar muscle-up",
+          "name_pt": "Bar muscle-up estrito",
+          "description": "Continuous ascent over bar with zero kipping or leg swing, strictly transitioning from pull to press.",
+          "target": "3 sets of 4 clean repetitions"
+        },
+        {
+          "level": 6,
+          "id": "ring_muscleup",
+          "name": "Strict ring muscle-up",
+          "name_pt": "Muscle-up nas argolas",
+          "description": "Complete muscle-up transition on suspended gymnastics rings starting from strict false grip.",
+          "target": "3 sets of 4 clean repetitions"
+        }
+      ]
+    }
+  ]
+}
