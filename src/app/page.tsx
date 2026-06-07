@@ -29,7 +29,9 @@ import {
   ShieldX,
   Clock,
   ArrowRight,
-  Heart
+  Heart,
+  Coffee,
+  BatteryCharging
 } from "lucide-react";
 import { getCycleState } from "@/lib/cycle-math";
 import { LlmWorkoutOutput, UserProfile } from "@/lib/schemas";
@@ -1115,7 +1117,7 @@ export default function Home() {
               /* B. SUNDAY REST DAY VIEW */
               <div className="bg-[#FFFFFF] border border-border-light rounded-lg p-6 text-center shadow-sm">
                 <div className="w-16 h-16 bg-brand-soft rounded-full flex items-center justify-center mx-auto mb-4 border border-brand-deep/10 shadow-sm">
-                  <Heart className="w-8 h-8 text-brand-deep" />
+                  <Coffee className="w-8 h-8 text-brand-deep" />
                 </div>
                 <h3 className="text-lg font-medium mb-2 lowercase text-brand-deep">recovery protocol</h3>
                 <p className="text-sm text-text-secondary mb-5 leading-relaxed lowercase px-4">
