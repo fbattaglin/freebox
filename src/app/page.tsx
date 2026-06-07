@@ -22,7 +22,13 @@ import {
   Activity,
   Loader2,
   Settings,
-  Brain
+  Brain,
+  Shield,
+  ShieldCheck,
+  ShieldAlert,
+  ShieldX,
+  Clock,
+  ArrowRight
 } from "lucide-react";
 import { getCycleState } from "@/lib/cycle-math";
 import { LlmWorkoutOutput, UserProfile } from "@/lib/schemas";
@@ -93,6 +99,7 @@ export default function Home() {
   // Settings and Access Passcode states
   const [isSettingsOpen, setIsSettingsOpen] = useState<boolean>(false);
   const [passcode, setPasscode] = useState<string>("");
+  const [passcodeStatus, setPasscodeStatus] = useState<"unknown" | "checking" | "valid" | "invalid" | "open">("unknown");
 
   // Developer simulation overrides (for local testing on Mac)
   const [simulatedDateOffset, setSimulatedDateOffset] = useState<number>(0);
@@ -169,6 +176,21 @@ export default function Home() {
     const savedPasscode = localStorage.getItem("freebox_access_passcode");
     if (savedPasscode) {
       setPasscode(savedPasscode);
+      // Auto-verify passcode on startup
+      verifyPasscodeOnLoad(savedPasscode);
+    }
+
+    // Auto-initialize cycle: if profile exists but no cycle date, set to today
+    const sp = localStorage.getItem("freebox_user_profile");
+    const sd = localStorage.getItem("freebox_cycle_start");
+    if (sp && !sd) {
+      const profile = JSON.parse(sp);
+      if (profile.age && profile.weight) {
+        const now = new Date();
+        const autoDate = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+        localStorage.setItem("freebox_cycle_start", autoDate);
+        setCycleStartDate(autoDate);
+      }
     }
   }, []);
 
@@ -184,10 +206,34 @@ export default function Home() {
     setError("");
   }, [simulatedDateOffset]);
 
+  // --- Passcode Verification ---
+  const verifyPasscodeOnLoad = async (code: string) => {
+    try {
+      setPasscodeStatus("checking");
+      const res = await fetch("/api/verify", {
+        headers: { "x-freebox-passcode": code },
+      });
+      const data = await res.json();
+      if (data.valid) {
+        setPasscodeStatus(data.mode === "open" ? "open" : "valid");
+      } else {
+        setPasscodeStatus("invalid");
+      }
+    } catch {
+      setPasscodeStatus("unknown");
+    }
+  };
+
+  const handleVerifyPasscode = async () => {
+    await verifyPasscodeOnLoad(passcode);
+  };
+
   if (!mounted) return null;
 
   // --- Calculate Cycle Variables ---
-  const todayStr = activeDate.toISOString().split("T")[0];
+  // Use local date components to avoid UTC timezone shift
+  // (critical: toISOString() would shift the date forward after 6pm in UTC-6)
+  const todayStr = `${activeDate.getFullYear()}-${String(activeDate.getMonth() + 1).padStart(2, '0')}-${String(activeDate.getDate()).padStart(2, '0')}`;
   const cycleState = cycleStartDate ? getCycleState(cycleStartDate, activeDate) : null;
   const isRestDay = cycleState?.dayType === "rest";
   const isSkillsDay = cycleState?.dayType === "skills";
@@ -291,7 +337,7 @@ export default function Home() {
           energy,
           recovery,
           cycleStartDate,
-          activeDate: activeDate.toISOString(), // FIXED: Send simulated date to sync server-side calculations
+          activeDate: `${activeDate.getFullYear()}-${String(activeDate.getMonth() + 1).padStart(2, '0')}-${String(activeDate.getDate()).padStart(2, '0')}T12:00:00.000Z`, // Send as noon UTC to avoid date shift
           weeklyHistory,
           userProfile,
         }),
@@ -502,7 +548,7 @@ export default function Home() {
   return (
     <div className="flex-1 w-full max-w-xl mx-auto flex flex-col px-4 py-8">
       {/* Header */}
-      <header className="mb-8 flex justify-between items-center border-b border-border-light pb-4">
+      <header className="mb-4 flex justify-between items-center border-b border-border-light pb-4">
         <div className="flex items-center gap-3">
           <Image src="/freebox_logo.png" alt="Freebox Logo" width={64} height={64} className="opacity-90" />
           <div>
@@ -511,20 +557,77 @@ export default function Home() {
           </div>
         </div>
         
-        {cycleStartDate && (
-          <button 
-            onClick={() => setIsSettingsOpen(true)} 
-            className="text-xs text-text-secondary hover:text-foreground flex items-center gap-1.5 cursor-pointer transition-colors px-2 py-1 border border-border-light rounded bg-[#F9F9FB]"
-          >
-            <Settings className="w-4 h-4" />
-            settings
-          </button>
-        )}
+        <button 
+          onClick={() => setIsSettingsOpen(true)} 
+          className="text-xs text-text-secondary hover:text-foreground flex items-center gap-1.5 cursor-pointer transition-colors px-2 py-1 border border-border-light rounded bg-[#F9F9FB]"
+        >
+          <Settings className="w-4 h-4" />
+          settings
+        </button>
       </header>
+
+      {/* === PERSISTENT STATUS BAR === */}
+      {cycleStartDate && cycleState && (
+        <div className="mb-4 p-3 bg-[#FDFDFD] border border-border-light rounded-md space-y-2">
+          {/* Row 1: Date + Phase */}
+          <div className="flex justify-between items-center">
+            <div className="flex items-center gap-2 text-xs">
+              <Clock className="w-3.5 h-3.5 text-brand-deep" />
+              <span className="font-mono text-foreground font-medium">
+                {activeDate.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })}
+              </span>
+              <span className="text-text-secondary">•</span>
+              <span className="text-brand-deep font-medium lowercase">{cycleState.dayName}</span>
+            </div>
+            <div className="flex items-center gap-2">
+              {/* Passcode status indicator */}
+              {passcodeStatus === "valid" ? (
+                <div className="flex items-center gap-1 text-[10px] text-green-600 font-mono" title="Passcode verified">
+                  <ShieldCheck className="w-3.5 h-3.5" />
+                </div>
+              ) : passcodeStatus === "open" ? (
+                <div className="flex items-center gap-1 text-[10px] text-amber-500 font-mono" title="No passcode required (open mode)">
+                  <Shield className="w-3.5 h-3.5" />
+                </div>
+              ) : passcodeStatus === "invalid" ? (
+                <div className="flex items-center gap-1 text-[10px] text-red-500 font-mono" title="Invalid passcode">
+                  <ShieldX className="w-3.5 h-3.5" />
+                </div>
+              ) : passcodeStatus === "checking" ? (
+                <Loader2 className="w-3.5 h-3.5 animate-spin text-text-secondary" />
+              ) : (
+                <div className="flex items-center gap-1 text-[10px] text-text-secondary font-mono" title="Passcode not verified yet">
+                  <ShieldAlert className="w-3.5 h-3.5" />
+                </div>
+              )}
+            </div>
+          </div>
+          {/* Row 2: Phase + Week progress mini bar */}
+          <div className="flex items-center gap-2 text-[10px] text-text-secondary font-mono">
+            <span className="lowercase">{cycleState.phase}</span>
+            <span>•</span>
+            <span>week {cycleState.currentWeek}/11</span>
+            <div className="flex-1 flex gap-0.5 ml-1">
+              {Array.from({ length: 11 }).map((_, i) => (
+                <div
+                  key={i}
+                  className={`h-1 flex-1 rounded-sm ${
+                    i + 1 === cycleState.currentWeek
+                      ? "bg-brand-deep"
+                      : i + 1 < cycleState.currentWeek
+                      ? "bg-brand-deep/30"
+                      : "bg-border-light"
+                  }`}
+                />
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Developer Simulation Override Tool — HIDDEN IN PRODUCTION */}
       {process.env.NODE_ENV === "development" && (
-        <div className="mb-6 p-3 bg-[#F9F9FB] border border-border-light rounded text-[11px] font-mono text-text-secondary">
+        <div className="mb-4 p-3 bg-[#F9F9FB] border border-border-light rounded text-[11px] font-mono text-text-secondary">
           <div className="font-semibold mb-1 uppercase tracking-wider text-[10px]">simulation tool (mac debug)</div>
           <div className="flex flex-wrap items-center gap-3">
             <div>
@@ -850,12 +953,29 @@ export default function Home() {
                   </div>
                   <div>
                     <h3 className="text-base font-medium lowercase mb-1">
-                      {todaysLog.phase} / {todaysLog.dayName} Complete
+                      {todaysLog.phase} / {todaysLog.dayName} — session logged
                     </h3>
                     <p className="text-xs text-text-secondary lowercase leading-relaxed">
-                      You completed today's session. Your load and repetitions have been successfully logged. Muscle adaptation occurs during rest.
+                      your session data has been saved locally on this device. muscle protein synthesis peaks 24-48h post-stimulus — recovery is where adaptation happens.
                     </p>
                   </div>
+
+                  {/* Exercises Summary */}
+                  <div className="w-full space-y-2">
+                    <div className="text-[10px] text-text-secondary uppercase tracking-wider font-mono text-left">session log</div>
+                    {todaysLog.exercises.map((ex, idx) => {
+                      const totalVol = ex.setsData.reduce((acc, s) => acc + ((parseFloat(s.weight) || 0) * (parseInt(s.reps) || 0)), 0);
+                      return (
+                        <div key={idx} className="flex justify-between items-center text-xs bg-[#F9F9FB] border border-border-light rounded px-3 py-2">
+                          <span className="text-foreground lowercase font-medium">{ex.name}</span>
+                          <span className="text-text-secondary font-mono text-[10px]">
+                            {ex.setsData.length}s × {ex.setsData[0]?.reps || "?"} {totalVol > 0 ? `• ${totalVol.toLocaleString()} kg` : ""}
+                          </span>
+                        </div>
+                      );
+                    })}
+                  </div>
+
                   {todaysLog.why && (
                     <div className="p-3 bg-[#F9F9FB] border border-border-light rounded text-xs text-left text-text-secondary italic w-full">
                       "{todaysLog.why}"
@@ -863,13 +983,52 @@ export default function Home() {
                   )}
                 </div>
 
-                {/* Call-to-action Alert: Next Step */}
-                <div className="bg-[#E6EEFF] border border-[#0055FF]/20 rounded-md p-5 text-center space-y-2">
-                  <h4 className="text-xs font-semibold text-[#0055FF] lowercase flex items-center justify-center gap-1.5 font-mono">
-                    <Calendar className="w-4 h-4" /> check back tomorrow
-                  </h4>
-                  <p className="text-xs text-[#0055FF]/90 leading-relaxed lowercase">
-                    your work for today is fully logged and secure. <strong className="text-[#0055FF] font-semibold">return to the app tomorrow</strong> to check in your sleep, energy, and recovery to dynamically synthesize your next session.
+                {/* Next Session Card */}
+                {tomorrowState && (
+                  <div className="bg-[#E6EEFF] border border-[#0055FF]/20 rounded-md p-5 space-y-3">
+                    <h4 className="text-xs font-semibold text-[#0055FF] lowercase flex items-center gap-1.5 font-mono">
+                      <ArrowRight className="w-4 h-4" /> next session
+                    </h4>
+                    <div className="flex justify-between items-center text-xs">
+                      <div className="text-[#0055FF]/90 lowercase">
+                        <strong className="text-[#0055FF] font-semibold">
+                          {(() => {
+                            const tomorrow = new Date(activeDate);
+                            tomorrow.setDate(tomorrow.getDate() + 1);
+                            return tomorrow.toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' });
+                          })()}
+                        </strong>
+                        {" "} — {tomorrowState.dayName}
+                      </div>
+                      <span className="text-[10px] bg-white/50 px-2 py-0.5 rounded text-[#0055FF] font-mono lowercase">
+                        {tomorrowState.dayType}
+                      </span>
+                    </div>
+                    <p className="text-xs text-[#0055FF]/70 leading-relaxed lowercase">
+                      open the app to check in your recovery signals. the constraint-compiler will synthesize your next protocol from the {tomorrowState.dayName} template.
+                    </p>
+                  </div>
+                )}
+
+                {/* Regenerate Workout Override */}
+                <div className="bg-[#FFFFFF] border border-border-light rounded-md p-4">
+                  <button
+                    onClick={() => {
+                      if (confirm("This will clear today's logged workout and let you generate a new one. Your existing data for today will be lost. Continue?")) {
+                        const updatedHistory = history.filter((h) => h.date !== todayStr);
+                        setHistory(updatedHistory);
+                        localStorage.setItem("freebox_history", JSON.stringify(updatedHistory));
+                        setCurrentWorkout(null);
+                        setWorkoutTracker({});
+                      }
+                    }}
+                    className="w-full flex items-center justify-center gap-2 py-2 border border-border-light text-text-secondary hover:text-foreground hover:border-brand-deep/30 rounded text-xs transition-colors cursor-pointer lowercase font-mono"
+                  >
+                    <RefreshCw className="w-3.5 h-3.5" />
+                    override: regenerate today's workout
+                  </button>
+                  <p className="text-[10px] text-text-secondary text-center mt-2 lowercase">
+                    use this if you need to redo today's session with different readiness levels.
                   </p>
                 </div>
 
@@ -893,30 +1052,6 @@ export default function Home() {
                     </div>
                   );
                 })()}
-
-                {/* Next Up / AI Orchestrator Preview Card */}
-                {tomorrowState && (
-                  <div className="bg-[#FFFFFF] border border-border-light rounded-md p-5 space-y-3">
-                    <h4 className="text-xs font-semibold uppercase tracking-wider text-text-secondary flex items-center gap-1.5 font-mono">
-                      <Zap className="w-4 h-4 text-brand-deep" />
-                      AI Orchestration: Tomorrow's Protocol
-                    </h4>
-                    <div className="space-y-2">
-                      <div className="flex justify-between items-center text-xs">
-                        <div>
-                          <span className="text-text-secondary lowercase">next up: </span>
-                          <span className="font-medium text-foreground lowercase">{tomorrowState.dayName}</span>
-                        </div>
-                        <span className="text-[10px] bg-[#F9F9FB] border border-border-light px-2 py-0.5 rounded text-text-secondary font-mono lowercase">
-                          {tomorrowState.dayType}
-                        </span>
-                      </div>
-                      <p className="text-xs text-text-secondary lowercase leading-relaxed">
-                        When you check in tomorrow, our constraint-compiler agent will synthesize your next session by mapping the sports science template for <strong className="text-foreground font-medium">{tomorrowState.dayName}</strong> with your curated exercise library, auto-regulated by your recovery indicators, injury profile, and distilled 11-week training memory.
-                      </p>
-                    </div>
-                  </div>
-                )}
               </div>
             ) : isRestDay ? (
               /* B. SUNDAY REST DAY VIEW */
@@ -1352,23 +1487,55 @@ export default function Home() {
                 {/* 2. Security Passcode */}
                 <div className="space-y-3 pb-6 border-b border-border-light">
                   <h3 className="text-xs font-semibold uppercase tracking-wider text-text-secondary flex items-center gap-1.5">
-                    <Activity className="w-4 h-4 text-brand-deep" />
+                    <Shield className="w-4 h-4 text-brand-deep" />
                     security passcode
                   </h3>
                   <p className="text-[11px] text-text-secondary leading-relaxed lowercase">
                     Protects your Anthropic API tokens from unauthorized calls. Ensure this matches the <code>FREEBOX_PASSCODE</code> variable configured in Vercel.
                   </p>
-                  <div>
+                  <div className="space-y-2">
                     <input 
                       type="password" 
                       value={passcode}
                       onChange={(e) => {
                         setPasscode(e.target.value);
                         localStorage.setItem("freebox_access_passcode", e.target.value);
+                        setPasscodeStatus("unknown"); // Reset status on change
                       }}
                       placeholder="enter security passcode"
                       className="w-full px-2.5 py-1.5 border border-border-light rounded bg-[#F9F9FB] text-xs focus:outline-none focus:ring-1 focus:ring-brand-deep text-foreground font-mono"
                     />
+                    <button
+                      type="button"
+                      onClick={handleVerifyPasscode}
+                      disabled={passcodeStatus === "checking"}
+                      className="w-full flex items-center justify-center gap-2 py-1.5 border border-border-light rounded text-xs text-text-secondary hover:text-foreground hover:border-brand-deep/30 transition-colors cursor-pointer font-mono lowercase disabled:opacity-50"
+                    >
+                      {passcodeStatus === "checking" ? (
+                        <><Loader2 className="w-3.5 h-3.5 animate-spin" /> verifying...</>
+                      ) : (
+                        <><Shield className="w-3.5 h-3.5" /> test connection</>
+                      )}
+                    </button>
+                    {/* Status Badge */}
+                    {passcodeStatus === "valid" && (
+                      <div className="flex items-center gap-1.5 text-[11px] text-green-600 bg-green-50 border border-green-200 rounded px-3 py-1.5 font-mono">
+                        <ShieldCheck className="w-3.5 h-3.5" />
+                        connected — passcode is valid and API access is secured.
+                      </div>
+                    )}
+                    {passcodeStatus === "open" && (
+                      <div className="flex items-center gap-1.5 text-[11px] text-amber-600 bg-amber-50 border border-amber-200 rounded px-3 py-1.5 font-mono">
+                        <ShieldAlert className="w-3.5 h-3.5" />
+                        open mode — no FREEBOX_PASSCODE env var is set on the server. anyone with the URL can use API credits.
+                      </div>
+                    )}
+                    {passcodeStatus === "invalid" && (
+                      <div className="flex items-center gap-1.5 text-[11px] text-red-600 bg-red-50 border border-red-200 rounded px-3 py-1.5 font-mono">
+                        <ShieldX className="w-3.5 h-3.5" />
+                        invalid — the passcode does not match the server. workout generation will be blocked.
+                      </div>
+                    )}
                   </div>
                 </div>
 

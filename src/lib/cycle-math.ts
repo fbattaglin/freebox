@@ -13,9 +13,10 @@ export interface CycleState {
  * - DayName is mapped from the current weekday (Monday to Sunday).
  */
 export function getCycleState(startDateStr: string, targetDate: Date = new Date()): CycleState {
-  const startDate = new Date(startDateStr);
-  
-  // Set times to midnight to avoid time zone offset differences causing half-day shifts
+  // Parse as local date components to prevent UTC midnight shift in negative timezones
+  // e.g., new Date("2026-06-01") creates UTC midnight = May 31st 18:00 in UTC-6
+  const [y, m, d] = startDateStr.split('-').map(Number);
+  const startDate = new Date(y, m - 1, d);
   startDate.setHours(0, 0, 0, 0);
   const checkDate = new Date(targetDate);
   checkDate.setHours(0, 0, 0, 0);
