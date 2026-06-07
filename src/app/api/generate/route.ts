@@ -9,6 +9,17 @@ import sessionTemplatesJson from "@/../data/session-templates.json";
 
 export async function POST(request: Request) {
   try {
+    // 0. Verify security passcode (if configured)
+    const passcode = request.headers.get("x-freebox-passcode");
+    const requiredPasscode = process.env.FREEBOX_PASSCODE;
+    
+    if (requiredPasscode && passcode !== requiredPasscode) {
+      return NextResponse.json(
+        { error: "access denied: invalid or missing security passcode. please enter the correct passcode in settings." },
+        { status: 401 }
+      );
+    }
+
     const body = await request.json();
     const { sleep, energy, recovery, cycleStartDate, activeDate, weeklyHistory = [], userProfile } = body;
 

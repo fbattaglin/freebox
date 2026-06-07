@@ -3,6 +3,17 @@ import { Anthropic } from "@anthropic-ai/sdk";
 
 export async function POST(request: Request) {
   try {
+    // 0. Verify security passcode (if configured)
+    const passcode = request.headers.get("x-freebox-passcode");
+    const requiredPasscode = process.env.FREEBOX_PASSCODE;
+    
+    if (requiredPasscode && passcode !== requiredPasscode) {
+      return NextResponse.json(
+        { error: "access denied: invalid or missing security passcode. please enter the correct passcode in settings." },
+        { status: 401 }
+      );
+    }
+
     const { history } = await request.json();
 
     if (!history || !Array.isArray(history) || history.length === 0) {

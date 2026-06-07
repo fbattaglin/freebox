@@ -20,7 +20,9 @@ import {
   Target,
   User,
   Activity,
-  Loader2
+  Loader2,
+  Settings,
+  Brain
 } from "lucide-react";
 import { getCycleState } from "@/lib/cycle-math";
 import { LlmWorkoutOutput, UserProfile } from "@/lib/schemas";
@@ -88,6 +90,10 @@ export default function Home() {
   // Saturday skills active expanded accordion family ID
   const [activeFamilyId, setActiveFamilyId] = useState<string | null>(null);
 
+  // Settings and Access Passcode states
+  const [isSettingsOpen, setIsSettingsOpen] = useState<boolean>(false);
+  const [passcode, setPasscode] = useState<string>("");
+
   // Developer simulation overrides (for local testing on Mac)
   const [simulatedDateOffset, setSimulatedDateOffset] = useState<number>(0);
   const [activeDate, setActiveDate] = useState<Date>(new Date());
@@ -143,6 +149,11 @@ export default function Home() {
     const savedProfile = localStorage.getItem("freebox_user_profile");
     if (savedProfile) {
       setUserProfile(JSON.parse(savedProfile));
+    }
+
+    const savedPasscode = localStorage.getItem("freebox_access_passcode");
+    if (savedPasscode) {
+      setPasscode(savedPasscode);
     }
   }, []);
 
@@ -217,7 +228,10 @@ export default function Home() {
     try {
       const response = await fetch("/api/debrief", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { 
+          "Content-Type": "application/json",
+          "x-freebox-passcode": passcode
+        },
         body: JSON.stringify({ history: history.slice(-55) }), // Pass up to the last 11 weeks of logs
       });
 
@@ -253,7 +267,10 @@ export default function Home() {
     try {
       const response = await fetch("/api/generate", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { 
+          "Content-Type": "application/json",
+          "x-freebox-passcode": passcode
+        },
         body: JSON.stringify({
           sleep,
           energy,
@@ -420,6 +437,53 @@ export default function Home() {
     </div>
   );
 
+  // Helper to calculate tomorrow's split
+  const getTomorrowSplit = () => {
+    if (!cycleStartDate) return null;
+    const tomorrow = new Date(activeDate);
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    return getCycleState(cycleStartDate, tomorrow);
+  };
+  const tomorrowState = getTomorrowSplit();
+
+  // Helper for phase science breakdowns
+  const getPhaseScienceDetail = (phase: string) => {
+    switch (phase) {
+      case "strength":
+        return {
+          title: "strength phase (weeks 1–3)",
+          focus: "neural adaptations & recruitment",
+          text: "targets motor unit recruitment and rate of force development. by lifting heavy weights (80-87% 1RM) at lower volumes, we maximize neurological strength gains without accumulating high muscular hypertrophy fatigue."
+        };
+      case "hypertrophy":
+        return {
+          title: "hypertrophy phase (weeks 4–6)",
+          focus: "myofibrillar protein synthesis",
+          text: "targets mechanical tension and metabolic stress. moderately high volume (3-4 sets of 6-12 reps) stimulates muscle cross-sectional area growth and myofibrillar protein synthesis."
+        };
+      case "resistance":
+        return {
+          title: "resistance phase (weeks 7–8)",
+          focus: "metabolic stress tolerance",
+          text: "drives capillary density and metabolic buffer efficiency. higher reps with shorter rest intervals increase muscular endurance and lactate clearance rates."
+        };
+      case "explosive":
+        return {
+          title: "explosive phase (weeks 9–10)",
+          focus: "rate of force development (rfd)",
+          text: "targets power output, velocity, and tendon stiffness. focusing on fast concentric movements sharpens the central nervous system's capacity to recruit high-threshold motor units rapidly."
+        };
+      case "deload":
+        return {
+          title: "deload phase (week 11)",
+          focus: "active supercompensation",
+          text: "promotes nervous system recovery and tissue repair. by dropping set volume by 30-50% while maintaining moderate intensity, the body sheds accumulated fatigue, revealing new strength baselines."
+        };
+      default:
+        return null;
+    }
+  };
+
   return (
     <div className="flex-1 w-full max-w-xl mx-auto flex flex-col px-4 py-8">
       {/* Header */}
@@ -434,11 +498,11 @@ export default function Home() {
         
         {cycleStartDate && (
           <button 
-            onClick={handleResetCycle} 
-            className="text-xs text-text-secondary hover:text-foreground flex items-center gap-1 cursor-pointer transition-colors"
+            onClick={() => setIsSettingsOpen(true)} 
+            className="text-xs text-text-secondary hover:text-foreground flex items-center gap-1.5 cursor-pointer transition-colors px-2 py-1 border border-border-light rounded bg-[#F9F9FB]"
           >
-            <RotateCcw className="w-4 h-4" />
-            reset cycle
+            <Settings className="w-4 h-4" />
+            settings
           </button>
         )}
       </header>
@@ -539,59 +603,93 @@ export default function Home() {
             </p>
             
             <form onSubmit={handleStartCycle} className="space-y-4">
-              <div className="space-y-3 pb-4 border-b border-border-light">
-                <h3 className="text-sm font-medium lowercase flex items-center gap-2">
-                  <User className="w-5 h-5 text-brand-deep" />
-                  athlete profile
-                </h3>
-                
-                <div className="grid grid-cols-2 gap-3">
-                  <div>
-                    <label className="block text-xs text-text-secondary mb-1 lowercase">age</label>
-                    <input 
-                      type="number" 
-                      value={userProfile.age}
-                      onChange={(e) => setUserProfile({...userProfile, age: e.target.value})}
-                      placeholder="e.g. 30"
-                      className="w-full px-3 py-2 border border-border-light rounded bg-[#FDFDFD] text-sm focus:outline-none focus:ring-1 focus:ring-brand-deep text-foreground font-mono"
-                    />
+              {(!userProfile.age || !userProfile.weight) ? (
+                <div className="space-y-3 pb-4 border-b border-border-light">
+                  <h3 className="text-sm font-medium lowercase flex items-center gap-2">
+                    <User className="w-5 h-5 text-brand-deep" />
+                    athlete profile
+                  </h3>
+                  
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <label className="block text-xs text-text-secondary mb-1 lowercase">age</label>
+                      <input 
+                        type="number" 
+                        value={userProfile.age}
+                        onChange={(e) => {
+                          const updated = {...userProfile, age: e.target.value};
+                          setUserProfile(updated);
+                          localStorage.setItem("freebox_user_profile", JSON.stringify(updated));
+                        }}
+                        placeholder="e.g. 30"
+                        className="w-full px-3 py-2 border border-border-light rounded bg-[#FDFDFD] text-sm focus:outline-none focus:ring-1 focus:ring-brand-deep text-foreground font-mono"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs text-text-secondary mb-1 lowercase">weight (kg)</label>
+                      <input 
+                        type="number" 
+                        value={userProfile.weight}
+                        onChange={(e) => {
+                          const updated = {...userProfile, weight: e.target.value};
+                          setUserProfile(updated);
+                          localStorage.setItem("freebox_user_profile", JSON.stringify(updated));
+                        }}
+                        placeholder="e.g. 80"
+                        className="w-full px-3 py-2 border border-border-light rounded bg-[#FDFDFD] text-sm focus:outline-none focus:ring-1 focus:ring-brand-deep text-foreground font-mono"
+                      />
+                    </div>
                   </div>
+
                   <div>
-                    <label className="block text-xs text-text-secondary mb-1 lowercase">weight (kg)</label>
+                    <label className="block text-xs text-text-secondary mb-1 lowercase">experience level</label>
+                    <select 
+                      value={userProfile.experience}
+                      onChange={(e) => {
+                        const updated = {...userProfile, experience: e.target.value};
+                        setUserProfile(updated);
+                        localStorage.setItem("freebox_user_profile", JSON.stringify(updated));
+                      }}
+                      className="w-full px-3 py-2 border border-border-light rounded bg-[#FDFDFD] text-sm focus:outline-none focus:ring-1 focus:ring-brand-deep text-foreground font-mono"
+                    >
+                      <option value="beginner">Beginner</option>
+                      <option value="intermediate">Intermediate</option>
+                      <option value="advanced">Advanced</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="block text-xs text-text-secondary mb-1 lowercase">injuries / limitations</label>
                     <input 
-                      type="number" 
-                      value={userProfile.weight}
-                      onChange={(e) => setUserProfile({...userProfile, weight: e.target.value})}
-                      placeholder="e.g. 80"
+                      type="text" 
+                      value={userProfile.limitations}
+                      onChange={(e) => {
+                        const updated = {...userProfile, limitations: e.target.value};
+                        setUserProfile(updated);
+                        localStorage.setItem("freebox_user_profile", JSON.stringify(updated));
+                      }}
+                      placeholder="e.g. low back pain, shoulder impingement (or leave blank)"
                       className="w-full px-3 py-2 border border-border-light rounded bg-[#FDFDFD] text-sm focus:outline-none focus:ring-1 focus:ring-brand-deep text-foreground font-mono"
                     />
                   </div>
                 </div>
-
-                <div>
-                  <label className="block text-xs text-text-secondary mb-1 lowercase">experience level</label>
-                  <select 
-                    value={userProfile.experience}
-                    onChange={(e) => setUserProfile({...userProfile, experience: e.target.value})}
-                    className="w-full px-3 py-2 border border-border-light rounded bg-[#FDFDFD] text-sm focus:outline-none focus:ring-1 focus:ring-brand-deep text-foreground font-mono"
+              ) : (
+                <div className="p-3 bg-[#F9F9FB] rounded text-xs text-text-secondary leading-relaxed border border-border-light flex justify-between items-center mb-4">
+                  <div>
+                    <span className="font-semibold text-foreground lowercase">athlete profile is active</span>
+                    <div className="text-[10px] mt-0.5 font-mono">
+                      age: {userProfile.age} | weight: {userProfile.weight}kg | level: {userProfile.experience}
+                    </div>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setIsSettingsOpen(true)}
+                    className="text-[10px] text-brand-deep font-mono underline cursor-pointer hover:text-brand-deep/80"
                   >
-                    <option value="beginner">Beginner</option>
-                    <option value="intermediate">Intermediate</option>
-                    <option value="advanced">Advanced</option>
-                  </select>
+                    edit profile
+                  </button>
                 </div>
-
-                <div>
-                  <label className="block text-xs text-text-secondary mb-1 lowercase">injuries / limitations</label>
-                  <input 
-                    type="text" 
-                    value={userProfile.limitations}
-                    onChange={(e) => setUserProfile({...userProfile, limitations: e.target.value})}
-                    placeholder="e.g. low back pain, shoulder impingement (or leave blank)"
-                    className="w-full px-3 py-2 border border-border-light rounded bg-[#FDFDFD] text-sm focus:outline-none focus:ring-1 focus:ring-brand-deep text-foreground font-mono"
-                  />
-                </div>
-              </div>
+              )}
 
               <div>
                 <div className="flex justify-between items-center mb-1">
@@ -728,19 +826,72 @@ export default function Home() {
               </div>
             </div>
 
-            {/* A. WORKOUT LOGGED STATE */}
             {todaysLog ? (
-              <div className="p-4 flex flex-col items-center justify-center text-center space-y-4">
-                <div className="bg-brand-soft p-3 rounded-full mb-2">
-                  <Check className="w-7 h-7 text-brand-deep" />
+              <div className="space-y-6">
+                {/* Completion Status */}
+                <div className="bg-[#FFFFFF] border border-border-light rounded-md p-6 flex flex-col items-center text-center space-y-4">
+                  <div className="bg-brand-soft p-3 rounded-full">
+                    <Check className="w-6 h-6 text-brand-deep" />
+                  </div>
+                  <div>
+                    <h3 className="text-base font-medium lowercase mb-1">
+                      {todaysLog.phase} / {todaysLog.dayName} Complete
+                    </h3>
+                    <p className="text-xs text-text-secondary lowercase leading-relaxed">
+                      You completed today's session. Your load and repetitions have been successfully logged. Muscle adaptation occurs during rest.
+                    </p>
+                  </div>
+                  {todaysLog.why && (
+                    <div className="p-3 bg-[#F9F9FB] border border-border-light rounded text-xs text-left text-text-secondary italic w-full">
+                      "{todaysLog.why}"
+                    </div>
+                  )}
                 </div>
-                <h3 className="text-lg font-medium lowercase">{todaysLog.phase} / {todaysLog.dayName} Complete</h3>
-                <p className="text-sm text-text-secondary mb-4 leading-relaxed lowercase">
-                  You completed today's session. Your load and repetitions have been successfully logged. Muscle adaptation occurs during rest.
-                </p>
-                <div className="p-3 bg-[#FDFDFD] rounded text-xs text-left text-text-secondary italic">
-                  "{todaysLog.why}"
-                </div>
+
+                {/* Science Explainer Card */}
+                {getPhaseScienceDetail(todaysLog.phase) && (() => {
+                  const science = getPhaseScienceDetail(todaysLog.phase)!;
+                  return (
+                    <div className="bg-[#FFFFFF] border border-border-light rounded-md p-5 space-y-3">
+                      <h4 className="text-xs font-semibold uppercase tracking-wider text-text-secondary flex items-center gap-1.5 font-mono">
+                        <Activity className="w-4 h-4 text-brand-deep" />
+                        sports science breakdown
+                      </h4>
+                      <div className="space-y-1.5">
+                        <div className="text-xs font-medium lowercase text-foreground">
+                          {science.title} — focus: <span className="text-brand-deep font-mono">{science.focus}</span>
+                        </div>
+                        <p className="text-xs text-text-secondary lowercase leading-relaxed">
+                          {science.text}
+                        </p>
+                      </div>
+                    </div>
+                  );
+                })()}
+
+                {/* Next Up / AI Orchestrator Preview Card */}
+                {tomorrowState && (
+                  <div className="bg-[#FFFFFF] border border-border-light rounded-md p-5 space-y-3">
+                    <h4 className="text-xs font-semibold uppercase tracking-wider text-text-secondary flex items-center gap-1.5 font-mono">
+                      <Zap className="w-4 h-4 text-brand-deep" />
+                      AI Orchestration: Tomorrow's Protocol
+                    </h4>
+                    <div className="space-y-2">
+                      <div className="flex justify-between items-center text-xs">
+                        <div>
+                          <span className="text-text-secondary lowercase">next up: </span>
+                          <span className="font-medium text-foreground lowercase">{tomorrowState.dayName}</span>
+                        </div>
+                        <span className="text-[10px] bg-[#F9F9FB] border border-border-light px-2 py-0.5 rounded text-text-secondary font-mono lowercase">
+                          {tomorrowState.dayType}
+                        </span>
+                      </div>
+                      <p className="text-xs text-text-secondary lowercase leading-relaxed">
+                        When you check in tomorrow, our constraint-compiler agent will synthesize your next session by mapping the sports science template for <strong className="text-foreground font-medium">{tomorrowState.dayName}</strong> with your curated exercise library, auto-regulated by your recovery indicators, injury profile, and distilled 11-week training memory.
+                      </p>
+                    </div>
+                  </div>
+                )}
               </div>
             ) : isRestDay ? (
               /* B. SUNDAY REST DAY VIEW */
@@ -1084,6 +1235,197 @@ export default function Home() {
         </>
         )}
       </main>
+
+      {/* Settings Overlay Modal */}
+      {isSettingsOpen && (
+        <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex justify-end transition-opacity duration-300">
+          <div className="w-full max-w-md bg-[#FFFFFF] h-full shadow-2xl p-6 overflow-y-auto flex flex-col justify-between">
+            <div>
+              {/* Header */}
+              <div className="flex justify-between items-center pb-4 border-b border-border-light mb-6">
+                <h2 className="text-base font-semibold lowercase flex items-center gap-2 text-foreground">
+                  <Settings className="w-5 h-5 text-brand-deep" />
+                  settings & profile
+                </h2>
+                <button 
+                  onClick={() => setIsSettingsOpen(false)}
+                  className="text-xs text-text-secondary hover:text-foreground cursor-pointer px-2 py-1 border border-border-light rounded font-mono"
+                >
+                  close
+                </button>
+              </div>
+
+              <div className="space-y-6">
+                {/* 1. Athlete Profile */}
+                <div className="space-y-3 pb-6 border-b border-border-light">
+                  <h3 className="text-xs font-semibold uppercase tracking-wider text-text-secondary flex items-center gap-1.5">
+                    <User className="w-4 h-4 text-brand-deep" />
+                    athlete profile
+                  </h3>
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <label className="block text-[11px] text-text-secondary mb-1 lowercase font-mono">age</label>
+                      <input 
+                        type="number" 
+                        value={userProfile.age}
+                        onChange={(e) => {
+                          const updated = { ...userProfile, age: e.target.value };
+                          setUserProfile(updated);
+                          localStorage.setItem("freebox_user_profile", JSON.stringify(updated));
+                        }}
+                        placeholder="e.g. 30"
+                        className="w-full px-2.5 py-1.5 border border-border-light rounded bg-[#F9F9FB] text-xs focus:outline-none focus:ring-1 focus:ring-brand-deep text-foreground font-mono"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-[11px] text-text-secondary mb-1 lowercase font-mono">weight (kg)</label>
+                      <input 
+                        type="number" 
+                        value={userProfile.weight}
+                        onChange={(e) => {
+                          const updated = { ...userProfile, weight: e.target.value };
+                          setUserProfile(updated);
+                          localStorage.setItem("freebox_user_profile", JSON.stringify(updated));
+                        }}
+                        placeholder="e.g. 80"
+                        className="w-full px-2.5 py-1.5 border border-border-light rounded bg-[#F9F9FB] text-xs focus:outline-none focus:ring-1 focus:ring-brand-deep text-foreground font-mono"
+                      />
+                    </div>
+                  </div>
+                  <div>
+                    <label className="block text-[11px] text-text-secondary mb-1 lowercase font-mono">experience level</label>
+                    <select 
+                      value={userProfile.experience}
+                      onChange={(e) => {
+                        const updated = { ...userProfile, experience: e.target.value };
+                        setUserProfile(updated);
+                        localStorage.setItem("freebox_user_profile", JSON.stringify(updated));
+                      }}
+                      className="w-full px-2.5 py-1.5 border border-border-light rounded bg-[#F9F9FB] text-xs focus:outline-none focus:ring-1 focus:ring-brand-deep text-foreground font-mono"
+                    >
+                      <option value="beginner">Beginner</option>
+                      <option value="intermediate">Intermediate</option>
+                      <option value="advanced">Advanced</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-[11px] text-text-secondary mb-1 lowercase font-mono">injuries / limitations</label>
+                    <input 
+                      type="text" 
+                      value={userProfile.limitations}
+                      onChange={(e) => {
+                        const updated = { ...userProfile, limitations: e.target.value };
+                        setUserProfile(updated);
+                        localStorage.setItem("freebox_user_profile", JSON.stringify(updated));
+                      }}
+                      placeholder="e.g. lower back pain (or leave blank)"
+                      className="w-full px-2.5 py-1.5 border border-border-light rounded bg-[#F9F9FB] text-xs focus:outline-none focus:ring-1 focus:ring-brand-deep text-foreground"
+                    />
+                  </div>
+                </div>
+
+                {/* 2. Security Passcode */}
+                <div className="space-y-3 pb-6 border-b border-border-light">
+                  <h3 className="text-xs font-semibold uppercase tracking-wider text-text-secondary flex items-center gap-1.5">
+                    <Activity className="w-4 h-4 text-brand-deep" />
+                    security passcode
+                  </h3>
+                  <p className="text-[11px] text-text-secondary leading-relaxed lowercase">
+                    Protects your Anthropic API tokens from unauthorized calls. Ensure this matches the <code>FREEBOX_PASSCODE</code> variable configured in Vercel.
+                  </p>
+                  <div>
+                    <input 
+                      type="password" 
+                      value={passcode}
+                      onChange={(e) => {
+                        setPasscode(e.target.value);
+                        localStorage.setItem("freebox_access_passcode", e.target.value);
+                      }}
+                      placeholder="enter security passcode"
+                      className="w-full px-2.5 py-1.5 border border-border-light rounded bg-[#F9F9FB] text-xs focus:outline-none focus:ring-1 focus:ring-brand-deep text-foreground font-mono"
+                    />
+                  </div>
+                </div>
+
+                {/* 3. Living Memory */}
+                <div className="space-y-3 pb-6 border-b border-border-light">
+                  <h3 className="text-xs font-semibold uppercase tracking-wider text-text-secondary flex items-center gap-1.5">
+                    <Brain className="w-4 h-4 text-brand-deep" />
+                    intelligence memory
+                  </h3>
+                  {userProfile.longTermMemory ? (
+                    <div className="space-y-2">
+                      <div className="p-3 bg-brand-soft border border-brand-deep/10 rounded text-[11px] text-text-secondary leading-relaxed font-mono whitespace-pre-wrap max-h-40 overflow-y-auto">
+                        {userProfile.longTermMemory}
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          if (confirm("Are you sure you want to clear your long term training memory? The LLM coach will lose its historical intelligence context.")) {
+                            const updated = { ...userProfile, longTermMemory: "" };
+                            setUserProfile(updated);
+                            localStorage.setItem("freebox_user_profile", JSON.stringify(updated));
+                          }
+                        }}
+                        className="text-[10px] text-red-500 font-mono underline hover:text-red-600 cursor-pointer"
+                      >
+                        clear intelligence memory
+                      </button>
+                    </div>
+                  ) : (
+                    <p className="text-[11px] text-text-secondary lowercase italic">
+                      no distilled training memory present yet. memory is compiled automatically at the end of each 11-week cycle.
+                    </p>
+                  )}
+                </div>
+
+                {/* 4. Active Cycle Management */}
+                <div className="space-y-3">
+                  <h3 className="text-xs font-semibold uppercase tracking-wider text-text-secondary flex items-center gap-1.5">
+                    <Calendar className="w-4 h-4 text-brand-deep" />
+                    cycle management
+                  </h3>
+                  <div>
+                    <label className="block text-[11px] text-text-secondary mb-1 lowercase font-mono">cycle start date</label>
+                    <input 
+                      type="date" 
+                      value={cycleStartDate}
+                      onChange={(e) => {
+                        setCycleStartDate(e.target.value);
+                        localStorage.setItem("freebox_cycle_start", e.target.value);
+                      }}
+                      className="w-full px-2.5 py-1.5 border border-border-light rounded bg-[#F9F9FB] text-xs focus:outline-none focus:ring-1 focus:ring-brand-deep text-foreground font-mono"
+                    />
+                  </div>
+                  <div className="pt-2">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setIsSettingsOpen(false);
+                        handleResetCycle();
+                      }}
+                      className="w-full py-1.5 border border-red-200 text-red-600 hover:bg-red-50 font-medium rounded text-xs transition-colors cursor-pointer lowercase flex items-center justify-center gap-1 font-mono"
+                    >
+                      <RotateCcw className="w-3.5 h-3.5" />
+                      reset current cycle
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div className="pt-6 border-t border-border-light mt-6">
+              <button 
+                type="button"
+                onClick={() => setIsSettingsOpen(false)}
+                className="w-full py-2 bg-brand-deep text-white font-medium rounded text-xs hover:bg-opacity-95 cursor-pointer lowercase font-mono"
+              >
+                save and close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
